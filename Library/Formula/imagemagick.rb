@@ -1,17 +1,19 @@
 class Imagemagick < Formula
   desc "Tools and libraries to manipulate images in many formats"
-  homepage "http://www.imagemagick.org"
-  url "http://www.imagemagick.org/download/releases/ImageMagick-6.9.1-10.tar.xz"
-  mirror "http://ftp.nluug.nl/ImageMagick/ImageMagick-6.9.1-10.tar.xz"
-  sha256 "22565464059376513869b6626982e0726a33788ccc7e19a08e55ff1683d4ff92"
+  homepage "https://www.imagemagick.org/"
+  # Please always keep the Homebrew mirror as the primary URL as the
+  # ImageMagick site removes tarballs regularly which means we get issues
+  # unnecessarily and older versions of the formula are broken.
+  url "https://dl.bintray.com/homebrew/mirror/ImageMagick-6.9.3-7.tar.xz"
+  mirror "https://www.imagemagick.org/download/ImageMagick-6.9.3-7.tar.xz"
+  sha256 "6731c414b5b939713a73a088840ed68c22c91d1335514d228d6687d07ce2e1c8"
 
-  head "https://subversion.imagemagick.org/subversion/ImageMagick/trunk",
-       :using => :svn
+  head "http://git.imagemagick.org/repos/ImageMagick.git"
 
   bottle do
-    sha256 "efc853c530ddce73bf7abfcd1dfc9e571ca2d8207e655892cf75a2902b8050bd" => :yosemite
-    sha256 "bfe457b08aef23266f2a266bc440cc686ff162a8a9a2c708d8abe079e6079571" => :mavericks
-    sha256 "4e29a8bd387f4fc220e389eb91239eeb48ecbd4f5a94ecd2725151c2af84dba4" => :mountain_lion
+    sha256 "69bb41b7508782d9872dacbce53d8d9788a52ab74573c5e5e23a9004879c275a" => :el_capitan
+    sha256 "c6849cde7067a0a11dcbb6ff44bac17f659ff67f75597836246fc6ef621a099a" => :yosemite
+    sha256 "0a5367b1ffbda4793a7d86ccbe06fc36395769b468f54a4c2316aa25ec44e8ee" => :mavericks
   end
 
   deprecated_option "enable-hdri" => "with-hdri"
@@ -72,7 +74,7 @@ class Imagemagick < Formula
     end
     args << "--disable-opencl" if build.without? "opencl"
     args << "--without-gslib" if build.without? "ghostscript"
-    args << "--without-perl" if build.without? "perl"
+    args << "--with-perl" << "--with-perl-options='PREFIX=#{prefix}'" if build.with? "perl"
     args << "--with-gs-font-dir=#{HOMEBREW_PREFIX}/share/ghostscript/fonts" if build.without? "ghostscript"
     args << "--without-magick-plus-plus" if build.without? "magick-plus-plus"
     args << "--enable-hdri=yes" if build.with? "hdri"
@@ -81,7 +83,7 @@ class Imagemagick < Formula
 
     if build.with? "quantum-depth-32"
       quantum_depth = 32
-    elsif build.with? "quantum-depth-16"
+    elsif build.with?("quantum-depth-16") || build.with?("perl")
       quantum_depth = 16
     elsif build.with? "quantum-depth-8"
       quantum_depth = 8
@@ -108,14 +110,8 @@ class Imagemagick < Formula
 
   def caveats
     s = <<-EOS.undent
-      For full Perl support you must install the Image::Magick module from the CPAN.
-        https://metacpan.org/module/Image::Magick
-
-      The version of the Perl module and ImageMagick itself need to be kept in sync.
-      If you upgrade one, you must upgrade the other.
-
-      For this version of ImageMagick you should install
-      version #{version} of the Image::Magick Perl module.
+      For full Perl support you may need to adjust your PERL5LIB variable:
+        export PERL5LIB="#{HOMEBREW_PREFIX}/lib/perl5/site_perl":$PERL5LIB
     EOS
     s if build.with? "perl"
   end

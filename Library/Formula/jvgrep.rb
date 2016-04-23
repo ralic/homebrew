@@ -3,34 +3,38 @@ require "language/go"
 class Jvgrep < Formula
   desc "Grep for Japanese users of Vim"
   homepage "https://github.com/mattn/jvgrep"
-  url "https://github.com/mattn/jvgrep/archive/v4.2.tar.gz"
-  sha256 "33b7f28ba20489dbd5e90d1b68ad9c5b8c9919632c204ed02f7d2ce6384e59c6"
+  url "https://github.com/mattn/jvgrep/archive/v4.7.tar.gz"
+  sha256 "2c273949f42d61c2791db1199e166ce50ad508b8ef80a401111fcd5bf2644ac8"
 
   head "https://github.com/mattn/jvgrep.git"
 
   bottle do
-    cellar :any
-    sha256 "4481c6cdb2281a4f51c2049792ea2ac28dbfa35020157e8853e27933b0ae4583" => :yosemite
-    sha256 "ee066a8848a150969807647723de09cea8cc8b8ed38ce31220d058b1e62cc312" => :mavericks
-    sha256 "a46b5a7f23dc31bc9df5fcc89fe1618a2a0063dc1a75a466b21059c7a02db386" => :mountain_lion
+    cellar :any_skip_relocation
+    sha256 "e5a14ccfa2bd6b96e55b19d678ede06ccb3dbca41c401bdb8d514d13d5e751f3" => :el_capitan
+    sha256 "f3f18f72708f43bf6cbedb5e00222e12ccc7b49faa4d0fe4ee8003a2e2165ed0" => :yosemite
+    sha256 "16b326cd3bdd22cd9c8458751d47191c10710c7458135f15553409f1af0ab33b" => :mavericks
   end
 
   depends_on "go" => :build
 
   go_resource "github.com/daviddengcn/go-colortext" do
-    url "https://github.com/daviddengcn/go-colortext.git", :revision => "13eaeb896f5985a1ab74ddea58707a73d875ba57"
+    url "https://github.com/daviddengcn/go-colortext.git", :revision => "3b18c8575a432453d41fdafb340099fff5bba2f7"
   end
 
   go_resource "github.com/mattn/go-isatty" do
-    url "https://github.com/mattn/go-isatty.git", :revision => "ae0b1f8f8004be68d791a576e3d8e7648ab41449"
+    url "https://github.com/mattn/go-isatty.git", :revision => "56b76bdf51f7708750eac80fa38b952bb9f32639"
+  end
+
+  go_resource "github.com/mattn/go-colorable" do
+    url "https://github.com/mattn/go-colorable.git", :revision => "9cbef7c35391cca05f15f8181dc0b18bc9736dbb"
   end
 
   go_resource "golang.org/x/net" do
-    url "https://go.googlesource.com/net.git", :revision => "a8c61998a557a37435f719980da368469c10bfed"
+    url "https://go.googlesource.com/net.git", :revision => "4876518f9e71663000c348837735820161a42df7"
   end
 
   go_resource "golang.org/x/text" do
-    url "https://go.googlesource.com/text.git", :revision => "af4c2d73d0954e6f7ed1bd89afe33c9d347d9be5"
+    url "https://go.googlesource.com/text.git", :revision => "1b466db55e0ba5d56ef5315c728216b42f796491"
   end
 
   def install

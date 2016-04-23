@@ -3,8 +3,9 @@ require "formula"
 require "compat/formula_specialties"
 require "formula_installer"
 require "keg"
-require "testball_bottle"
+require "tab"
 require "testball"
+require "testball_bottle"
 
 class InstallBottleTests < Homebrew::TestCase
   def temporary_bottle_install(formula)
@@ -21,14 +22,14 @@ class InstallBottleTests < Homebrew::TestCase
     assert_predicate formula, :installed?
 
     begin
+      assert_predicate Tab.for_keg(keg), :poured_from_bottle
+
       yield formula
     ensure
       keg.unlink
       keg.uninstall
       formula.clear_cache
-      Dir["#{HOMEBREW_CACHE}/testball_bottle*"].each { |f| File.delete(f) }
-      # there will be log files when sandbox is enable.
-      formula.logs.rmtree if formula.logs.directory?
+      formula.bottle.clear_cache
     end
 
     refute_predicate keg, :exist?

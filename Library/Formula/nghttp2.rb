@@ -1,13 +1,13 @@
 class Nghttp2 < Formula
   desc "HTTP/2 C Library"
   homepage "https://nghttp2.org/"
-  url "https://github.com/tatsuhiro-t/nghttp2/releases/download/v1.2.1/nghttp2-1.2.1.tar.xz"
-  sha256 "e41bca1d99eadf004faa49bbc482067398a2550dddd4098211566b5622e9af03"
+  url "https://github.com/tatsuhiro-t/nghttp2/releases/download/v1.9.1/nghttp2-1.9.1.tar.xz"
+  sha256 "b8f8a0a1abac50da1eeb9238d0dadcda9725a7fe95eb0b4f7a482beabaf2b5fb"
 
   bottle do
-    sha256 "751dbe954087d3661543aa13a8647ca0ebd4bc3aecf2445a89d739f35e349e23" => :yosemite
-    sha256 "0c1ba68f5f99042b204222fe8c35e4ae15ebe3a18773ad1a44d2a1e080bef7d4" => :mavericks
-    sha256 "bbd07e612494f14e60b9e74d23979ec2aa664d75953c55d2f226be7ccf8eb264" => :mountain_lion
+    sha256 "ced932b048a82d351e4deedc217faa1807e3182143f75d9a5ab92da9ed79764c" => :el_capitan
+    sha256 "6e1f7c578ad7e6df0b2b8c7ef7255da015bfb7d4bbe066a64dd62fbfaccdce14" => :yosemite
+    sha256 "c1bf94094e7d8490e5615f2eeddc35d2ba5182d75218252eeffe5a0c390683be" => :mavericks
   end
 
   head do
@@ -21,10 +21,10 @@ class Nghttp2 < Formula
 
   option "with-examples", "Compile and install example programs"
   option "without-docs", "Don't build man pages"
-  option "with-python3", "This is required for enabling the python bindings"
+  option "with-python3", "Build python3 bindings"
 
-  depends_on :python => :build if MacOS.version <= :snow_leopard && build.with?("docs")
   depends_on :python3 => :optional
+  depends_on "sphinx-doc" => :build if build.with? "docs"
   depends_on "libxml2" if MacOS.version <= :lion
   depends_on "pkg-config" => :build
   depends_on "cunit" => :build
@@ -35,64 +35,9 @@ class Nghttp2 < Formula
   depends_on "boost"
   depends_on "spdylay" => :recommended
 
-  resource "sphinx" do
-    url "https://pypi.python.org/packages/source/S/Sphinx/Sphinx-1.3.1.tar.gz"
-    sha256 "1a6e5130c2b42d2de301693c299f78cc4bd3501e78b610c08e45efc70e2b5114"
-  end
-
-  resource "sphinx_rtd_theme" do
-    url "https://pypi.python.org/packages/source/s/sphinx_rtd_theme/sphinx_rtd_theme-0.1.7.tar.gz"
-    sha256 "9a490c861f6cf96a0050c29a92d5d1e01eda02ae6f50760ad5c96a327cdf14e8"
-  end
-
-  resource "docutils" do
-    url "https://pypi.python.org/packages/source/d/docutils/docutils-0.12.tar.gz"
-    sha256 "c7db717810ab6965f66c8cf0398a98c9d8df982da39b4cd7f162911eb89596fa"
-  end
-
-  resource "pygments" do
-    url "https://pypi.python.org/packages/source/P/Pygments/Pygments-2.0.2.tar.gz"
-    sha256 "7320919084e6dac8f4540638a46447a3bd730fca172afc17d2c03eed22cf4f51"
-  end
-
-  resource "jinja2" do
-    url "https://pypi.python.org/packages/source/J/Jinja2/Jinja2-2.7.3.tar.gz"
-    sha256 "2e24ac5d004db5714976a04ac0e80c6df6e47e98c354cb2c0d82f8879d4f8fdb"
-  end
-
-  resource "markupsafe" do
-    url "https://pypi.python.org/packages/source/M/MarkupSafe/MarkupSafe-0.23.tar.gz"
-    sha256 "a4ec1aff59b95a14b45eb2e23761a0179e98319da5a7eb76b56ea8cdc7b871c3"
-  end
-
-  resource "alabaster" do
-    url "https://pypi.python.org/packages/source/a/alabaster/alabaster-0.7.3.tar.gz"
-    sha256 "0703c1ea5a6af0bb6d0cec24708301334949d56ebc7f95c64028d9c66f9d8d5d"
-  end
-
-  resource "babel" do
-    url "https://pypi.python.org/packages/source/B/Babel/Babel-1.3.tar.gz"
-    sha256 "9f02d0357184de1f093c10012b52e7454a1008be6a5c185ab7a3307aceb1d12e"
-  end
-
-  resource "snowballstemmer" do
-    url "https://pypi.python.org/packages/source/s/snowballstemmer/snowballstemmer-1.2.0.tar.gz"
-    sha256 "6d54f350e7a0e48903a4e3b6b2cabd1b43e23765fbc975065402893692954191"
-  end
-
-  resource "six" do
-    url "https://pypi.python.org/packages/source/s/six/six-1.9.0.tar.gz"
-    sha256 "e24052411fc4fbd1f672635537c3fc2330d9481b18c0317695b46259512c91d5"
-  end
-
-  resource "pytz" do
-    url "https://pypi.python.org/packages/source/p/pytz/pytz-2015.2.tar.bz2"
-    sha256 "3e15b416c9a2039c1a51208b2cd3bb4ffd796cd19e601b1d2657afcb77c3dc90"
-  end
-
   resource "Cython" do
-    url "https://pypi.python.org/packages/source/C/Cython/cython-0.22.tar.gz"
-    sha256 "14307e7a69af9a0d0e0024d446af7e51cc0e3e4d0dfb10d36ba837e5e5844015"
+    url "https://pypi.python.org/packages/source/C/Cython/Cython-0.23.1.tar.gz"
+    sha256 "bdfd12d6a2a2e34b9a1bbc1af5a772cabdeedc3851703d249a52dcda8378018a"
   end
 
   # https://github.com/tatsuhiro-t/nghttp2/issues/125
@@ -102,23 +47,6 @@ class Nghttp2 < Formula
 
   def install
     ENV.cxx11
-
-    if build.with? "docs"
-      ENV.prepend_create_path "PYTHONPATH", buildpath+"sphinx/lib/python2.7/site-packages"
-      resources.each do |r|
-        r.stage do
-          system "python", *Language::Python.setup_install_args(buildpath/"sphinx")
-        end unless r.name == "Cython"
-      end
-      ENV.prepend_path "PATH", (buildpath/"sphinx/bin")
-    end
-
-    if build.with? "python3"
-      ENV.prepend_create_path "PYTHONPATH", buildpath/"cython/lib/python#{Language::Python.major_minor_version "python3"}/site-packages"
-      resource("Cython").stage do
-        system "python3", *(Language::Python.setup_install_args(buildpath/"cython") << "--install-scripts=#{buildpath}/cython/bin")
-      end
-    end
 
     args = %W[
       --prefix=#{prefix}
@@ -130,11 +58,7 @@ class Nghttp2 < Formula
 
     args << "--enable-examples" if build.with? "examples"
     args << "--with-spdylay" if build.with? "spdylay"
-    if build.with? "python3"
-      args << "--enable-python-bindings" << "PYTHON=python3" << "CYTHON=#{buildpath}/cython/bin/cython" << "PYTHON_EXTRA_LDFLAGS=-undefined dynamic_lookup"
-    else
-      args << "--disable-python-bindings"
-    end
+    args << "--disable-python-bindings"
 
     system "autoreconf", "-ivf" if build.head?
     system "./configure", *args
@@ -149,6 +73,22 @@ class Nghttp2 < Formula
 
     system "make", "install"
     libexec.install "examples" if build.with? "examples"
+
+    if build.with? "python3"
+      pyver = Language::Python.major_minor_version "python3"
+      ENV["PYTHONPATH"] = cythonpath = buildpath/"cython/lib/python#{pyver}/site-packages"
+      cythonpath.mkpath
+      ENV.prepend_create_path "PYTHONPATH", lib/"python#{pyver}/site-packages"
+
+      resource("Cython").stage do
+        system "python3", *Language::Python.setup_install_args(buildpath/"cython")
+      end
+
+      cd "python" do
+        system buildpath/"cython/bin/cython", "nghttp2.pyx"
+        system "python3", *Language::Python.setup_install_args(prefix)
+      end
+    end
   end
 
   test do

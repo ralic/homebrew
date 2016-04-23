@@ -1,20 +1,19 @@
 class Rethinkdb < Formula
   desc "The open-source database for the realtime web"
-  homepage "http://www.rethinkdb.com/"
-  url "http://download.rethinkdb.com/dist/rethinkdb-2.1.2.tgz"
-  sha256 "e46495ccd95e8b2bd855211f48ecd6964a64b520b951115d46b9b9e55cb48322"
+  homepage "https://www.rethinkdb.com/"
+  url "https://download.rethinkdb.com/dist/rethinkdb-2.2.6.tgz"
+  sha256 "9222d24d9da07d2a324965139c8e6bf00c790aeb09761d5f18dd2fdea870525f"
 
   bottle do
     cellar :any
-    sha256 "d23d74af5012291dc17baf43c52e160bac205993c382e4f7735e87b6629b5269" => :yosemite
-    sha256 "ab004f3d794361d220718ab0784fbbe34960f9999f6801264459800934eb579d" => :mavericks
-    sha256 "0d2fecbd99924316a5a98dd7e2e360645389f67533f6600efc5764d82108c992" => :mountain_lion
+    sha256 "6fe272986ca80617d2637460d2a878392570d57dd9fefa7fc4ea0efd8948aaa0" => :el_capitan
+    sha256 "361cf162a07953476c5fffedd8251f92229950fa0bb9e22f8b0064b84bf0b358" => :yosemite
+    sha256 "4aca0135d9edbd10050af4ba018d9d04bf4689a1dc88414ada368853806789b7" => :mavericks
   end
 
   depends_on :macos => :lion
   depends_on "boost" => :build
   depends_on "openssl"
-  depends_on "icu4c"
 
   fails_with :gcc do
     build 5666 # GCC 4.2.1
@@ -32,7 +31,11 @@ class Rethinkdb < Formula
     system "make"
     system "make", "install-osx"
 
-    mkdir_p "#{var}/log/rethinkdb"
+    (var/"log/rethinkdb").mkpath
+
+    inreplace "packaging/assets/config/default.conf.sample",
+              /^# directory=.*/, "directory=#{var}/rethinkdb"
+    etc.install "packaging/assets/config/default.conf.sample" => "rethinkdb.conf"
   end
 
   def plist; <<-EOS.undent
@@ -45,8 +48,8 @@ class Rethinkdb < Formula
       <key>ProgramArguments</key>
       <array>
           <string>#{opt_bin}/rethinkdb</string>
-          <string>-d</string>
-          <string>#{var}/rethinkdb</string>
+          <string>--config-file</string>
+          <string>#{etc}/rethinkdb.conf</string>
       </array>
       <key>WorkingDirectory</key>
       <string>#{HOMEBREW_PREFIX}</string>

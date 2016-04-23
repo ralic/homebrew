@@ -1,19 +1,23 @@
 class Dialog < Formula
   desc "Display user-friendly dialog boxes from shell scripts"
   homepage "http://invisible-island.net/dialog/"
-  url "ftp://invisible-island.net/dialog/dialog-1.2-20150528.tgz"
-  mirror "https://fossies.org/linux/misc/dialog-1.2-20150528.tgz"
-  sha256 "a8cd7a66bdb41e53a3145cbb0eb370c5ce7300fe0e9ad6d3e8d3b9e16ff16418"
+  url "ftp://invisible-island.net/dialog/dialog-1.3-20160209.tgz"
+  mirror "https://fossies.org/linux/misc/dialog-1.3-20160209.tgz"
+  sha256 "0314f7f2195edc58e7567a024dc1d658c2f8ea732796d8fa4b4927df49803f87"
 
   bottle do
-    cellar :any
-    sha256 "f1f50b2dc04d66fbff91db59d9e1fecfee3f54d9ec33614015582745e4d6dbd8" => :yosemite
-    sha256 "fd3feefe57a2bf2f0592e8cc818e4510a71f5ad39989395eb2ec5d24bf8ee93e" => :mavericks
-    sha256 "6da0c61033ca4eb531f943f12f61dd4e16fd92f6408a1e247494e6af6b22fae4" => :mountain_lion
+    cellar :any_skip_relocation
+    sha256 "8c12527b91df19529a580ff081621d30514119bfd999f76a763d59c406b32531" => :el_capitan
+    sha256 "89a8a52b64df7abe4aabfa9de1aa62523098154ae447da57fab3adce18b34a29" => :yosemite
+    sha256 "74626b6e18ebd0b4b755e04457be5a385bc10745cf08130f1330ab2b108a0550" => :mavericks
   end
 
   def install
     system "./configure", "--prefix=#{prefix}"
     system "make", "install-full"
+  end
+
+  test do
+    system "#{bin}/dialog", "--version"
   end
 end

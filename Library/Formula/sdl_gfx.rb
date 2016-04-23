@@ -1,15 +1,14 @@
 class SdlGfx < Formula
   desc "Graphics drawing primitives and other support functions"
   homepage "http://www.ferzkopp.net/joomla/content/view/19/14/"
-  url "http://www.ferzkopp.net/Software/SDL_gfx-2.0/SDL_gfx-2.0.24.tar.gz"
-  sha256 "30ad38c3e17586e5212ce4a43955adf26463e69a24bb241f152493da28d59118"
+  url "http://www.ferzkopp.net/Software/SDL_gfx-2.0/SDL_gfx-2.0.25.tar.gz"
+  sha256 "556eedc06b6cf29eb495b6d27f2dcc51bf909ad82389ba2fa7bdc4dec89059c0"
 
   bottle do
     cellar :any
-    revision 1
-    sha1 "6c70b7a9048bc066ecbb3c037c3a1a0fe2d3166a" => :yosemite
-    sha1 "364758460ad6f2cfc83c58d5fc8e793688cd9862" => :mavericks
-    sha1 "342e8a64a908f0e39ba6a1d8318ed111679067a1" => :mountain_lion
+    sha256 "f14692eab7c7a7a60694ea6aca4094c6ceb869604f2c587dd044df880b3a747b" => :el_capitan
+    sha256 "756fe923ceccdb3e9c5c7865298344a3520efe0bd549e493b109bc1506e6de29" => :yosemite
+    sha256 "aa06ebfac9112febe86ec4a933d807ae88e87329498a71678bd52be51748d9dc" => :mavericks
   end
 
   depends_on "sdl"

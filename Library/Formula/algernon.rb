@@ -3,62 +3,65 @@ require "language/go"
 class Algernon < Formula
   desc "HTTP/2 web server with Lua support"
   homepage "http://algernon.roboticoverlords.org/"
-  url "https://github.com/xyproto/algernon/archive/0.84.tar.gz"
-  sha256 "bc6c9899744ae50736dee1cea1e6c3228d89f8ccf436eb22694664b828e927fc"
+  url "https://github.com/xyproto/algernon/archive/0.87.tar.gz"
+  sha256 "5179e0f5f0ce7f21e7de6dc467bbcb6b986b325ce3c2ae0d6e75795c73bfd3c3"
+
   head "https://github.com/xyproto/algernon.git"
 
   bottle do
-    cellar :any
-    sha256 "4ebddb2a0305b89d5b266412f4b25174ad60fff9032a97f64d45e9f2aad86bb7" => :yosemite
-    sha256 "81b3ea73e9a7cae9cee08b02db3d3029d2340335b5b8957dcd128eb93246c906" => :mavericks
-    sha256 "4d6aaf877dd6f8d5606d076f39ebc1d93998ccaba26f683b998525e730449ccb" => :mountain_lion
+    sha256 "b8ea8fd8bcdb5b81df88d79e8a16f931f90b6b9a0c4a3221d288ad77876cb689" => :el_capitan
+    sha256 "16918d822d182c48e4ea852a2146419fa33a5a067fd63b2e898c9b0ab1824863" => :yosemite
+    sha256 "5b534dc90ef2b2374e0afd13ee160a912bb68b6cf5cbc046cebe13c5d636b677" => :mavericks
   end
 
-  depends_on "readline"
   depends_on "go" => :build
+  depends_on "readline"
 
   # List of Go dependencies and hashes.
   # Generated using: https://github.com/samertm/homebrew-go-resources
   %w[
-    github.com/bobappleyard/readline a1f23ef6d7c8177f1fe3085d3bf7b40457049f0c
-    github.com/boltdb/bolt 5eb31d5821750fbc84284d610c0ce85261662adb
-    github.com/bradfitz/http2 f8202bc903bda493ebba4aa54922d78430c2c42f
-    github.com/didip/tollbooth 92eb90f4dfa13cf8e2d2d7d120da6c3ff4d7f695
-    github.com/eknkc/amber ee5a5b8364bb73899fdd529d23af6ad9230f8a06
-    github.com/fatih/color 1b35f289c47d5c73c398cea8e006b7bcb6234a96
-    github.com/garyburd/redigo 3e4727f0ef5938d3a846cdb57e560dba4419e854
+    github.com/bobappleyard/readline 7e300e02d38ee8b418c0b4841877f1845d392328
+    github.com/boltdb/bolt b514920f8f2e0a68f857e5a12c774f385a59aef9
+    github.com/bradfitz/http2 aa7658c0e9902e929a9ed0996ef949e59fc0f3ab
+    github.com/didip/tollbooth be7d4891cc860c1d3d4004e99b898ddfd419ceb1
+    github.com/eknkc/amber 144da19a9994994c069f0693294a66dd310e14a4
+    github.com/fatih/color 4f7bcef27eec7925456d0c30c5e7b0408b3339be
+    github.com/fsnotify/fsnotify 3c39c22b2c7b0516d5f2553f1608e5d13cb19053
+    github.com/garyburd/redigo 4ed1111375cbeb698249ffe48dd463e9b0a63a7a
     github.com/getwe/figlet4go accc26b01fe9ddb12c1b2ce19c2212551d70af87
-    github.com/go-fsnotify/fsnotify 6549b98005f3e4026ad9f50ef7d5011f40ba1397
-    github.com/go-sql-driver/mysql 66b7d5c4956096efd4c945494d64ad73f1d9ec39
-    github.com/juju/ratelimit faa59ce93750e747b2997635e8b7daf30024b1ac
-    github.com/klauspost/pgzip 49eeca5953c2a6c7be4e34e8803029e6354d9bb7
-    github.com/mamaar/risotto 2683127f39af835e766a70b203efc6a51dd2ebe6
-    github.com/mattn/go-runewidth 5890272cd41c5103531cd7b79e428d99c9e97f76
-    github.com/mitchellh/go-homedir 1f6da4a72e57d4e7edd4a7295a585e0a3999a2d4
-    github.com/mitchellh/mapstructure 2caf8efc93669b6c43e0441cdc6aed17546c96f3
-    github.com/natefinch/pie 83bfd1821ee0ba96a47d98cbed424313fb60f57a
-    github.com/nsf/termbox-go 675ffd907b7401b8a709a5ef2249978af5616bb2
-    github.com/russross/blackfriday 386ef80f18233ea97960e855a54382ec446c6637
-    github.com/shiena/ansicolor 23296fbcefa1c43b2151a2c65812b71b85cf9f9b
-    github.com/shurcooL/sanitized_anchor_name 11a20b799bf22a02808c862eb6ca09f7fb38f84a
-    github.com/sirupsen/logrus d3e4ea403263d5e349c43ba8309e81f820325393
-    github.com/tylerb/graceful ac9ebe4f1ee151ac1eeeaef32957085cba64d508
+    github.com/go-sql-driver/mysql 0f2db9e6c9cff80a97ca5c2c5096242cc1554e16
+    github.com/juju/ratelimit 77ed1c8a01217656d2080ad51981f6e99adaa177
+    github.com/klauspost/compress 2d3d403f37d2e70b722590bc286076a17422e1f2
+    github.com/klauspost/cpuid 09cded8978dc9e80714c4d85b0322337b0a1e5e0
+    github.com/klauspost/crc32 19b0b332c9e4516a6370a0456e6182c3b5036720
+    github.com/klauspost/pgzip 95e8170c5d4da28db9c64dfc9ec3138ea4466fd4
+    github.com/mamaar/risotto c3b4f4dbac6541f11ed5bc1b97d00ef06bbe34c0
+    github.com/mattn/go-runewidth d037b52ae5c0338c2bb18da01fb7ddf0e8be9aa1
+    github.com/mitchellh/go-homedir 981ab348d865cf048eb7d17e78ac7192632d8415
+    github.com/mitchellh/mapstructure d2dd0262208475919e1a362f675cfc0e7c10e905
+    github.com/natefinch/pie 6059396cf8c679e5b6a7c82378e4623ca62f91ff
+    github.com/nsf/termbox-go 362329b0aa6447eadd52edd8d660ec1dff470295
+    github.com/russross/blackfriday 006144af03eeeff1037240a71865a9fd61f1c25f
+    github.com/shurcooL/sanitized_anchor_name 10ef21a441db47d8b13ebcc5fd2310f636973c77
+    github.com/sirupsen/logrus 219c8cb75c258c552e999735be6df753ffc7afdc
+    github.com/tylerb/graceful c78c8d9dded2ad16ad81b1fa526a81b2bb8049f6
     github.com/xyproto/cookie b84c85ae2aa3e21b2c7fc8c37d5a3081c0c9c83b
     github.com/xyproto/jpath d9213e11ca293e9e2705217ed372f53467d079ab
     github.com/xyproto/mime 58d5c367ee5b5e10f4662848579b8ccd759b280e
-    github.com/xyproto/permissionbolt b94c45a7f4c70603f12aa1d47a325a37036fd3ba
-    github.com/xyproto/permissions2 b5248dea92e87c670813edf4e68dc16eff59c05b
-    github.com/xyproto/permissionsql af2b7c0135a89a396d8486d71821eaa10f5cb62d
+    github.com/xyproto/permissionbolt 45c93aae7044f5ed912843437557c86b15463975
+    github.com/xyproto/permissions2 67cea239db53332cce94945251b9c70e49c35769
+    github.com/xyproto/permissionsql 282767a73a87a51428c00b4b9bf92590cf7fa163
     github.com/xyproto/pinterface d4db92ac11a07dc77faece6d5ec7d64492958f2a
-    github.com/xyproto/recwatch 3c0912279ade9b2d2a2a9c07cfbd41d7f5974393
-    github.com/xyproto/simplebolt d8607225ae1d5735a2153918307c2ebc2e38d899
+    github.com/xyproto/pongo2 6784189431019a8b8fb874cb4b30ee36789e7892
+    github.com/xyproto/recwatch eec3775073f11929973b0d06507a682f8061babb
+    github.com/xyproto/simplebolt 736018229d5a2972820bc9d6a8c5a6b0ba6fadc3
     github.com/xyproto/simplemaria 80759a73a6b576479bbf2baf955f7a46e04cb5b5
-    github.com/xyproto/simpleredis 97bd090877ec34e2eebb75a547eaab25bf92dee4
-    github.com/xyproto/term c9eabb15c0681f48654ee132a8bc6608c7bed8b3
+    github.com/xyproto/simpleredis de7b4cb9d1be983af7e9924394a27b67927e4918
+    github.com/xyproto/term 1861114eab54d24594e33fc87d63457cef67e24e
     github.com/xyproto/unzip 823950573952ff86553b26381fe7472549873cb4
     github.com/yosssi/gcss 39677598ea4f3ec1da5568173b4d43611f307edb
     github.com/yuin/gluamapper d836955830e75240d46ce9f0e6d148d94f2e1d3a
-    github.com/yuin/gopher-lua 54750d6aec1c2706990e9ec17438bd88d30231ab
+    github.com/yuin/gopher-lua e5faab4db06a81efb60d8e16c1d205e1d93736a9
   ].each_slice(2) do |resurl, rev|
     go_resource resurl do
       url "https://#{resurl}.git", :revision => rev
@@ -67,12 +70,12 @@ class Algernon < Formula
 
   go_resource "golang.org/x/crypto" do
     url "https://go.googlesource.com/crypto.git",
-      :revision => "4ed45ec682102c643324fae5dff8dab085b6c300"
+      :revision => "5dc8cb4b8a8eb076cbb5a06bc3b8682c15bdbbd3"
   end
 
   go_resource "golang.org/x/net" do
     url "https://go.googlesource.com/net.git",
-      :revision => "dfe268fd2bb5c793f4c083803609fce9806c6f80"
+      :revision => "3e5cd1ed149001198e582f9d3f5bfd564cde2896"
   end
 
   def install
@@ -88,7 +91,7 @@ class Algernon < Formula
       tempdb = "/tmp/_brew_test.db"
       cport = ":45678"
 
-      # Start the server in a fork and retrieve the PID
+      # Start the server in a fork
       algernon_pid = fork do
         exec "#{bin}/algernon", "--quiet", "--httponly", "--server", "--boltdb", tempdb, "--addr", cport
       end
@@ -98,7 +101,7 @@ class Algernon < Formula
 
       # Check that the server is responding correctly
       output = `curl -sIm3 -o- http://localhost#{cport}`
-      assert output.include?("Server: Algernon")
+      assert_match /^Server: Algernon/, output
       assert_equal 0, $?.exitstatus
 
     ensure

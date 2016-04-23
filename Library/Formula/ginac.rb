@@ -1,14 +1,14 @@
 class Ginac < Formula
-  desc "GiNaC is Not a Computer algebra system"
+  desc "Not a Computer algebra system"
   homepage "http://www.ginac.de/"
-  url "http://www.ginac.de/ginac-1.6.4.tar.bz2"
-  sha256 "6241158216b4f68c625ce7d843d5b6b070304f87e7fc8f4075b76501ca0f3c60"
+  url "http://www.ginac.de/ginac-1.6.7.tar.bz2"
+  sha256 "cea5971b552372017ea654c025adb44d5f1b3e3ce0a739da2fe95189572b85db"
 
   bottle do
     cellar :any
-    sha256 "c10a38a7217934a63a76da2c29986c4093c3e5c0ff419cb8363f576c0aea5ef7" => :yosemite
-    sha256 "526b8c7b60c708d6a8768c1fcc31b463ea86622af598d7aa2a76ba49185d4ff7" => :mavericks
-    sha256 "fed7446f2fe22e0ac04796d363edb159f5882501b7c354efb08636d5e88f21af" => :mountain_lion
+    sha256 "671d789e027d4975c547cf22f7dad5107b49cb13de42895382b57e6645fbb20b" => :el_capitan
+    sha256 "42c5df72efb11bcd3bf32c1578527f2c21ed403f9c07b98bc0e9cfa8e8ca8c7c" => :yosemite
+    sha256 "eee8d592da0e4aae053c4a6424b66a1a7d9f2e8351d2bb80d915bf5d0cb5bf7f" => :mavericks
   end
 
   depends_on "pkg-config" => :build

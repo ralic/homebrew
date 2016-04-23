@@ -1,15 +1,15 @@
 class Acpica < Formula
   desc "OS-independent implementation of the ACPI specification"
   homepage "https://www.acpica.org/"
+  url "https://acpica.org/sites/acpica/files/acpica-unix-20160212.tar.gz"
+  sha256 "ad26e0632d9800f9df76415f735bb8d4c0901d0596a00e6260f9297281742942"
   head "https://github.com/acpica/acpica.git"
-  url "https://acpica.org/sites/acpica/files/acpica-unix2-20150717.tar.gz"
-  sha256 "dd60f846ad8393d89d2cbadf362c6547c5e53405f5ee51097c90db3636f79e0a"
 
   bottle do
-    cellar :any
-    sha256 "7fbe5d6e05d227b549b50469b6bc33713fbc82781db6c9491069667393e2b135" => :yosemite
-    sha256 "a484e1f4d6750e2a99ccba5680696da9f3bca0dbe47053bc37e609100afb3db3" => :mavericks
-    sha256 "5fcda590ea6dca0191e58604eedb6a03318964adf175502e56eda34174295628" => :mountain_lion
+    cellar :any_skip_relocation
+    sha256 "7c31a7094ac5c67c2f71bea114b69cf008a1d00e9a13c710fe3ac180cd8933da" => :el_capitan
+    sha256 "16bcd9b2cfdec53612cb03ba20d3a1fea12e48d90c3678b2df73f1ca42295b48" => :yosemite
+    sha256 "0ad8f8040c309078985005795a91959d5b6fe522de8727799b5a390ca6754fff" => :mavericks
   end
 
   def install

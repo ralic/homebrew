@@ -1,14 +1,14 @@
 class Wimlib < Formula
   desc "Library to create, extract, and modify Windows Imaging files"
-  homepage "https://sourceforge.net/projects/wimlib/"
-  url "https://downloads.sourceforge.net/project/wimlib/wimlib-1.8.1.tar.gz"
-  sha256 "1558fe63243984259685eb35608631cf445042ac8d1998de8c62fe85f69a15e1"
+  homepage "https://wimlib.net/"
+  url "https://wimlib.net/downloads/wimlib-1.9.1.tar.gz"
+  sha256 "5466209f221919d091357667cf5a3c8b73ffc973972fce1c3aa96de6bd0cd014"
 
   bottle do
     cellar :any
-    sha256 "f64a9c0a634b693a6229c3203b0ffb472fb04b5ee7636221f771e93f97c39425" => :yosemite
-    sha256 "d6578827df535db9beec1d6b2d51edc3adb0aa59bb00ed3ed85862c0fb740cca" => :mavericks
-    sha256 "800522e6a311e06f65fd83ec1049948f327df1db0975241f086a8fe177eb53d6" => :mountain_lion
+    sha256 "73a97fab7cfb00de8aa963043b6315eefc10311daed952bf6fe2abc152989b2d" => :el_capitan
+    sha256 "aa799af72c20285be49a7a2bb4f048583f8fe185238d42f81890d9534ad2a10d" => :yosemite
+    sha256 "7e23174758d3f59d9b9f3d7adc14c43f373d7d9adc700d8e2c311c1af13e8e7f" => :mavericks
   end
 
   depends_on "pkg-config" => :build

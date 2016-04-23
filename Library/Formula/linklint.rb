@@ -9,6 +9,8 @@ class Linklint < Formula
     sha256 "e06ba7aef6c34a80a71bf3e463ca8b470384ebfb16cedfba30219f8a56762d55"
   end
 
+  bottle :unneeded
+
   def install
     mv "READ_ME.txt", "README" unless build.devel?
 

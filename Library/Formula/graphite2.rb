@@ -1,15 +1,19 @@
 class Graphite2 < Formula
   desc "Smart font renderer for non-Roman scripts"
-  homepage "https://scripts.sil.org/cms/scripts/page.php?site_id=projects&item_id=graphite_home"
-  url "https://downloads.sourceforge.net/project/silgraphite/graphite2/graphite2-1.2.4.tgz"
-  sha256 "4bc3d5168029bcc0aa00eb2c973269d29407be2796ff56f9c80e10736bd8b003"
+  homepage "http://graphite.sil.org"
+  url "https://github.com/silnrsi/graphite/archive/1.3.7.tar.gz"
+  mirror "https://mirrors.ocf.berkeley.edu/debian/pool/main/g/graphite2/graphite2_1.3.7.orig.tar.gz"
+  sha256 "4689f96f6bed02ce0caff710c1f99c281c888864b0c2c10eff08605274d8f7a8"
+  head "https://github.com/silnrsi/graphite.git"
 
   bottle do
     cellar :any
-    sha256 "24a47ed50dc7ac5ced74a8087468da3934aec145df0fa4e60091e1df7f86ff20" => :yosemite
-    sha256 "cc78dfeafc94c5176930df46dd2b0918c1707d91651d55464291d936207ae855" => :mavericks
-    sha256 "0ce563a4d9aa5139e45bc4e48bdc5c718095b8755eba55e3f61ff764ebd8d508" => :mountain_lion
+    sha256 "39571f2f4d88c97a99923c35448ff478cd6920058563b6d78273471d418ac4d8" => :el_capitan
+    sha256 "97478b8d3e7ad6fdae98d9017348704a52dc6ec17dd105ce1251ba67025d8dcb" => :yosemite
+    sha256 "f01c55c3e1fbf3ddd969e6402c2130fca1d07d8ee7d1a5058bb06363c57a3826" => :mavericks
   end
+
+  option :universal
 
   depends_on "cmake" => :build
 
@@ -19,6 +23,8 @@ class Graphite2 < Formula
   end
 
   def install
+    ENV.universal_binary if build.universal?
+
     system "cmake", *std_cmake_args
     system "make", "install"
   end

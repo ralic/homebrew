@@ -1,26 +1,31 @@
 class Go < Formula
   desc "Go programming environment"
   homepage "https://golang.org"
-  url "https://storage.googleapis.com/golang/go1.5.src.tar.gz"
-  mirror "https://fossies.org/linux/misc/go1.5.src.tar.gz"
-  version "1.5"
-  sha256 "be81abec996d5126c05f2d36facc8e58a94d9183a56f026fc9441401d80062db"
+  url "https://storage.googleapis.com/golang/go1.6.src.tar.gz"
+  mirror "https://fossies.org/linux/misc/go1.6.src.tar.gz"
+  version "1.6"
+  sha256 "a96cce8ce43a9bf9b2a4c7d470bc7ee0cb00410da815980681c8353218dcf146"
 
   head "https://github.com/golang/go.git"
 
   bottle do
-    sha256 "5733b061936b485265f8e2a3f34eda693ae15c3e1326b6fba65b421af2ebccaf" => :yosemite
-    sha256 "6eff306a07221d06bc5fb374561eab5df9074da55c1862c415f699b5189d3387" => :mavericks
-    sha256 "f4dc40f7a48a5dde33dc02ff601e9a02c0f516204b2bd57a46184bdd07a63f53" => :mountain_lion
+    revision 2
+    sha256 "c36e89f37ded34f000440af3b74bf7ac40857a09c2d668094601cb44889a12a8" => :el_capitan
+    sha256 "99aa8ee902111b6de1864dbf2ff5a2fa2782e70aadba61991c0c0e70a8e86b5d" => :yosemite
+    sha256 "df04d44e5aff57814b6871689e4ede01fdd4444cf632264ef0d9d77a02e1d406" => :mavericks
   end
 
   option "without-cgo", "Build without cgo"
   option "without-godoc", "godoc will not be installed for you"
   option "without-vet", "vet will not be installed for you"
+  option "without-race", "Build without race detector"
+
+  go_version = version
 
   resource "gotools" do
     url "https://go.googlesource.com/tools.git",
-    :revision => "d02228d1857b9f49cd0252788516ff5584266eb6"
+    :branch => "release-branch.go#{go_version}",
+    :revision => "c887be1b2ebd11663d4bf2fbca508c449172339e"
   end
 
   resource "gobootstrap" do
@@ -57,6 +62,12 @@ class Go < Formula
     rm_rf "gobootstrap" # Bootstrap not required beyond compile.
     libexec.install Dir["*"]
     bin.install_symlink Dir["#{libexec}/bin/go*"]
+
+    # Race detector only supported on amd64 platforms.
+    # https://golang.org/doc/articles/race_detector.html
+    if MacOS.prefer_64_bit? && build.with?("race")
+      system "#{bin}/go", "install", "-race", "std"
+    end
 
     if build.with?("godoc") || build.with?("vet")
       ENV.prepend_path "PATH", bin
@@ -103,12 +114,13 @@ class Go < Formula
     # Run go fmt check for no errors then run the program.
     # This is a a bare minimum of go working as it uses fmt, build, and run.
     system "#{bin}/go", "fmt", "hello.go"
-    assert_equal "Hello World\n", `#{bin}/go run hello.go`
+    assert_equal "Hello World\n", shell_output("#{bin}/go run hello.go")
 
     if build.with? "godoc"
       assert File.exist?(libexec/"bin/godoc")
       assert File.executable?(libexec/"bin/godoc")
     end
+
     if build.with? "vet"
       assert File.exist?(libexec/"pkg/tool/darwin_amd64/vet")
       assert File.executable?(libexec/"pkg/tool/darwin_amd64/vet")

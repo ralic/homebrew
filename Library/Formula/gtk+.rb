@@ -1,16 +1,28 @@
 class Gtkx < Formula
   desc "GUI toolkit"
   homepage "http://gtk.org/"
-  url "https://download.gnome.org/sources/gtk+/2.24/gtk+-2.24.28.tar.xz"
-  sha256 "b2c6441e98bc5232e5f9bba6965075dcf580a8726398f7374d39f90b88ed4656"
-  revision 2
 
-  bottle do
-    sha256 "afac113e6701cf013e0235e0fd91fcfc6659bc75220ca03e408a7a0f38671bb9" => :yosemite
-    sha256 "e7daa89de1184b1edc71242fd65b9b608885ebe6c92f5f793af8a46ef5912b28" => :mavericks
-    sha256 "17dcc4df1082000447b968c831f657b5f1aa863f32b8397900a38feaa7147db0" => :mountain_lion
+  stable do
+    url "https://download.gnome.org/sources/gtk+/2.24/gtk+-2.24.30.tar.xz"
+    sha256 "0d15cec3b6d55c60eac205b1f3ba81a1ed4eadd9d0f8e7c508bc7065d0c4ca50"
   end
 
+  bottle do
+    sha256 "2fce410cbdf902f513030a18bc5002ec844bde1b115355e2a168ca2101cd6625" => :el_capitan
+    sha256 "3fe1d4c9e0de77d30e45c88d40de344d829c404abb2af06ef4ca6233f87f25e5" => :yosemite
+    sha256 "995560643ea4d66d24f8147361adf910be6504be8eb58a8c2411a06c17c19944" => :mavericks
+  end
+
+  head do
+    url "https://git.gnome.org/browse/gtk+.git", :branch => "gtk-2-24"
+
+    depends_on "automake" => :build
+    depends_on "autoconf" => :build
+    depends_on "libtool" => :build
+    depends_on "gtk-doc" => :build
+  end
+
+  option :universal
   option "with-quartz-relocation", "Build with quartz relocation support"
 
   depends_on "pkg-config" => :build
@@ -36,6 +48,8 @@ class Gtkx < Formula
   end
 
   def install
+    ENV.universal_binary if build.universal?
+
     args = ["--disable-dependency-tracking",
             "--disable-silent-rules",
             "--prefix=#{prefix}",
@@ -46,6 +60,11 @@ class Gtkx < Formula
 
     args << "--enable-quartz-relocation" if build.with?("quartz-relocation")
 
+    if build.head?
+      inreplace "autogen.sh", "libtoolize", "glibtoolize"
+      ENV["NOCONFIGURE"] = "yes"
+      system "./autogen.sh"
+    end
     system "./configure", *args
     system "make", "install"
   end

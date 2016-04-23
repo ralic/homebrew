@@ -1,42 +1,34 @@
 class Jsoncpp < Formula
   desc "Library for interacting with JSON"
   homepage "https://github.com/open-source-parsers/jsoncpp"
-  url "https://github.com/open-source-parsers/jsoncpp/archive/0.10.5.tar.gz"
-  sha256 "56afb14d2ef1c52e72771a221346d4b94f0d46d4e67f796bbcaedb176ca823df"
+  url "https://github.com/open-source-parsers/jsoncpp/archive/1.6.5.tar.gz"
+  head "https://github.com/open-source-parsers/jsoncpp.git"
+  sha256 "a2b121eaff56ec88cfd034d17685821a908d0d87bc319329b04f91a6552c1ac2"
 
   bottle do
     cellar :any
-    sha256 "23e7bafcd961be747ab26c3d754f5723ba8a86d4915cf31bcaee002618898b18" => :yosemite
-    sha256 "72c73a2a679f8196bed4fb65cfa04cbb16fa7a565901830f34c3a8d5734c3911" => :mavericks
-    sha256 "7d3400af12dbe322fec3aab9894a920e68b711d01e6205767966ad102cbd8e14" => :mountain_lion
+    sha256 "ee0670a321326b422497c3844dde76154e87cb26bab9b5be49d2d26a5164513b" => :el_capitan
+    sha256 "83d4c292d053abeee3769e3fba06baeedcc0d4ae6e84c1c64069ae7c62f6d199" => :yosemite
+    sha256 "c8239ff5d50f0f7d200683ca4613dc271954226136cd4d6206ffc2583fab650b" => :mavericks
   end
 
-  depends_on "scons" => :build
+  option :universal
+
+  needs :cxx11
+
+  depends_on "cmake" => :build
 
   def install
-    gccversion = `g++ -dumpversion`.strip
-    libs = buildpath/"libs/linux-gcc-#{gccversion}/"
+    ENV.cxx11
 
-    scons "platform=linux-gcc"
-    system "install_name_tool", "-id", lib/"libjsoncpp.dylib", libs/"libjson_linux-gcc-#{gccversion}_libmt.dylib"
-
-    lib.install libs/"libjson_linux-gcc-#{gccversion}_libmt.dylib" => "libjsoncpp.dylib"
-    lib.install libs/"libjson_linux-gcc-#{gccversion}_libmt.a" =>"libjsoncpp.a"
-    (include/"jsoncpp").install buildpath/"include/json"
-
-    (lib/"pkgconfig/jsoncpp.pc").write <<-EOS.undent
-      prefix=#{prefix}
-      exec_prefix=${prefix}
-      libdir=#{lib}
-      includedir=#{include}
-
-      Name: jsoncpp
-      Description: API for manipulating JSON
-      Version: #{version}
-      URL: https://github.com/open-source-parsers/jsoncpp
-      Libs: -L${libdir} -ljsoncpp
-      Cflags: -I${includedir}/jsoncpp/
-    EOS
+    cmake_args = std_cmake_args
+    cmake_args << "-DBUILD_STATIC_LIBS=ON" << "-DBUILD_SHARED_LIBS=ON" << "-DJSONCPP_WITH_CMAKE_PACKAGE=ON" << "-DJSONCPP_WITH_TESTS=OFF" << "-DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF"
+    if build.universal?
+      ENV.universal_binary
+      cmake_args << "-DCMAKE_OSX_ARCHITECTURES=#{Hardware::CPU.universal_archs.as_cmake_arch_flags}"
+    end
+    system "cmake", ".", *cmake_args
+    system "make", "install"
   end
 
   test do

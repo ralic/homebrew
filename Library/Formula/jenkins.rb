@@ -1,14 +1,13 @@
 class Jenkins < Formula
   desc "Extendable open source continuous integration server"
   homepage "https://jenkins-ci.org"
-  url "http://mirrors.jenkins-ci.org/war/1.626/jenkins.war"
-  sha256 "e6df4d44f1110d1095b4e05c0d574f1120ac4f7bf943fba99c22edff0127c110"
+  url "http://mirrors.jenkins-ci.org/war/1.655/jenkins.war"
+  sha256 "0cee889af697c115961ce50229cc5e39d1b798c0a0a689687b745c0a938c8547"
 
-  bottle do
-    cellar :any
-    sha256 "27b888de2255abfbec3438d304e7c3e5ea3c3c98d50775b7b4456d505730bfd4" => :yosemite
-    sha256 "d1329ac5ed0f8afadcc6e651d7fe8dbbab46aa4aa8b54cc184f5c2abb8afa4ff" => :mavericks
-    sha256 "a28c12de6ef20c1aaf4799b11676bd3d1dd00f6f0557a29d3072898a0cf6edc9" => :mountain_lion
+  devel do
+    url "http://mirrors.jenkins-ci.org/war-rc/2.0/jenkins.war"
+    version "2.0-rc"
+    sha256 "7ff7759e1d7a097e018c8001db5f4248db04d0bf39f9b0f06934c124a936cfa2"
   end
 
   head do
@@ -16,10 +15,13 @@ class Jenkins < Formula
     depends_on "maven" => :build
   end
 
-  depends_on :java => "1.6+"
+  bottle :unneeded
+
+  depends_on :java => "1.7+"
 
   def install
     if build.head?
+      ENV.java_cache
       system "mvn", "clean", "install", "-pl", "war", "-am", "-DskipTests"
     else
       system "jar", "xvf", "jenkins.war"
@@ -61,13 +63,14 @@ class Jenkins < Formula
 
   test do
     ENV["JENKINS_HOME"] = testpath
+    ENV["_JAVA_OPTIONS"] = "-Djava.io.tmpdir=#{testpath}"
     pid = fork do
       exec "#{bin}/jenkins"
     end
     sleep 60
 
     begin
-      assert_match /"mode":"NORMAL"/, shell_output("curl localhost:8080/api/json")
+      assert_match /Welcome to Jenkins!|Unlock Jenkins|Authentication required/, shell_output("curl localhost:8080/")
     ensure
       Process.kill("SIGINT", pid)
       Process.wait(pid)

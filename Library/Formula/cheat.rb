@@ -1,15 +1,15 @@
 class Cheat < Formula
   desc "Create and view interactive cheat sheets for *nix commands"
   homepage "https://github.com/chrisallenlane/cheat"
-  url "https://github.com/chrisallenlane/cheat/archive/2.1.13.tar.gz"
-  sha256 "454c01355cde69aa97e49cb6f5539039f68aa6421fbebb01f036f6367ca3490a"
+  url "https://github.com/chrisallenlane/cheat/archive/2.1.22.tar.gz"
+  sha256 "48df9b920260bee35bd5cdde83bb51e958d9278416141a64e1f46a3981ccb454"
   head "https://github.com/chrisallenlane/cheat.git"
 
   bottle do
-    cellar :any
-    sha256 "fd467fb04b87e29cf834b13cea7ec3656006716a7a6525e5533593fb2a933619" => :yosemite
-    sha256 "2013c308fdd0bfa02145ca83764d0b3cdae350853f454f0c1be0ba9dfc29d986" => :mavericks
-    sha256 "f536da0f0676547d9f34a817eb68291589ec1d9a986abd3f38205899ac1cb570" => :mountain_lion
+    cellar :any_skip_relocation
+    sha256 "9ae7262046f5b657043b2eaf158d7e41171c7328eeb0c9f88c8dbea670bd50a3" => :el_capitan
+    sha256 "da3f145ba253b64a440920f3c1121191d2ddfac4aa5f95c745daae5007f3d11e" => :yosemite
+    sha256 "e0e6288ba060680e0f56a917328af07103e628030e9d11733329f5583b38ffd5" => :mavericks
   end
 
   depends_on :python if MacOS.version <= :snow_leopard
@@ -20,8 +20,8 @@ class Cheat < Formula
   end
 
   resource "Pygments" do
-    url "https://pypi.python.org/packages/source/P/Pygments/Pygments-2.0.2.tar.gz"
-    sha256 "7320919084e6dac8f4540638a46447a3bd730fca172afc17d2c03eed22cf4f51"
+    url "https://pypi.python.org/packages/source/P/Pygments/Pygments-2.1.1.tar.gz"
+    sha256 "2df7d9a85b56e54c7c021dc98fc877bd216ead652c10da170779c004fb59c01b"
   end
 
   def install

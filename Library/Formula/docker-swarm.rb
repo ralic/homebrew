@@ -3,16 +3,16 @@ require "language/go"
 class DockerSwarm < Formula
   desc "Turn a pool of Docker hosts into a single, virtual host"
   homepage "https://github.com/docker/swarm"
-  url "https://github.com/docker/swarm/archive/v0.4.0.tar.gz"
-  sha256 "c3ee1a34ce86da4d31f652c871dfa120fc78d5cc835e391034d740e83b48f7a3"
+  url "https://github.com/docker/swarm/archive/v1.1.3.tar.gz"
+  sha256 "bf9d7a2fe2cc69e34ead33952f38b621dd3bb006ec28e0185f9f7b18956a64e5"
 
   head "https://github.com/docker/swarm.git"
 
   bottle do
-    cellar :any
-    sha256 "aae8957b821f820b9757e0cc962c4227cab0f0f4a1ecb19413f763a1e9659b9f" => :yosemite
-    sha256 "a54e6021cb4c21a2df10d543d1a66ea071e5f2c201d58bd1f1e4f5d0aeb79257" => :mavericks
-    sha256 "3b256069986b4bb9c65957c81d7debe915957b87402343aec72c1cf2dcc05559" => :mountain_lion
+    cellar :any_skip_relocation
+    sha256 "1b2a683c7a81c6f4ac07489acaa208761e334db216a1aefbda31ed226973cbfe" => :el_capitan
+    sha256 "ee895056f283b9988cc06453493a69c5887fb6044492531901f7dfcb0f69b2e3" => :yosemite
+    sha256 "a97d21fe7435235a2f0c6a1badf4851ba73b920144d896cd8dbbde4c6a3ac961" => :mavericks
   end
 
   depends_on "go" => :build
@@ -26,7 +26,6 @@ class DockerSwarm < Formula
     Language::Go.stage_deps resources, buildpath/"src"
 
     system "go", "build", "-o", "docker-swarm"
-
     bin.install "docker-swarm"
   end
 

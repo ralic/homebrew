@@ -1,13 +1,14 @@
 class Tesseract < Formula
   desc "OCR (Optical Character Recognition) engine"
   homepage "https://github.com/tesseract-ocr/"
-  url "https://github.com/tesseract-ocr/tesseract/archive/3.04.00.tar.gz"
-  sha256 "7e6e48b625e1fba9bc825a4ef8c39f12c60aae1084939133b3c6a00f8f8dc38c"
+  url "https://github.com/tesseract-ocr/tesseract/archive/3.04.01.tar.gz"
+  sha256 "57f63e1b14ae04c3932a2683e4be4954a2849e17edd638ffe91bc5a2156adc6a"
+  revision 1
 
   bottle do
-    sha256 "78c7929c7e5cd92db137aa16a5d787bb53dca84031c7afcd91039a4adfcaabe1" => :yosemite
-    sha256 "0c331fa0bb3a247039af2f96441cc7ac7e1e687cb2e48e315bcabd227f9ba97d" => :mavericks
-    sha256 "141b3d5d09b1cf6448ca32f8377e40eeafc6f2e71134ccd5c67ce4b76cd6388a" => :mountain_lion
+    sha256 "0e1ea373a757f19a7f19f3412cda85b612cc2d230e14cacb26ea0ddc694ca101" => :el_capitan
+    sha256 "99a634c471474235b5c846cd74e242b30691b2a02153e6e1bd63aa4a8f2c9b6f" => :yosemite
+    sha256 "aee2237246941213a2a042c2a305a460751678046ce0c27af832d5da8935667f" => :mavericks
   end
 
   head do
@@ -23,10 +24,23 @@ class Tesseract < Formula
     end
   end
 
-  option "all-languages", "Install recognition data for all languages"
+  option "with-all-languages", "Install recognition data for all languages"
+  option "with-training-tools", "Install OCR training tools"
+  option "with-opencl", "Enable OpenCL support"
 
-  depends_on "libtiff" => :recommended
+  deprecated_option "all-languages" => "with-all-languages"
+
   depends_on "leptonica"
+  depends_on "libtiff" => :recommended
+
+  if build.with? "training-tools"
+    depends_on "libtool" => :build
+    depends_on "icu4c"
+    depends_on "glib"
+    depends_on "cairo"
+    depends_on "pango"
+    depends_on :x11
+  end
 
   needs :cxx11
 
@@ -57,16 +71,36 @@ class Tesseract < Formula
 
     ENV.cxx11
 
+    # Fix broken pkg-config file
+    # Can be removed with next version bump
+    # https://github.com/tesseract-ocr/tesseract/issues/241
+    inreplace "tesseract.pc.in", "@OPENCL_LIB@", "@OPENCL_LDFLAGS@" if build.stable?
+
     system "./autogen.sh" if build.head?
-    system "./configure", "--disable-dependency-tracking", "--prefix=#{prefix}"
+
+    args = %W[
+      --disable-dependency-tracking
+      --prefix=#{prefix}
+    ]
+    args << "--enable-opencl" if build.with? "opencl"
+    system "./configure", *args
+
     system "make", "install"
+    if build.with? "training-tools"
+      system "make", "training"
+      system "make", "training-install"
+    end
     if build.head?
       resource("tessdata-head").stage { mv Dir["*"], share/"tessdata" }
-    elsif build.include? "all-languages"
+    elsif build.with? "all-languages"
       resource("tessdata").stage { mv Dir["*"], share/"tessdata" }
     else
       resource("eng").stage { mv "eng.traineddata", share/"tessdata" }
       resource("osd").stage { mv "osd.traineddata", share/"tessdata" }
     end
+  end
+
+  test do
+    assert_match version.to_s, shell_output("#{bin}/tesseract -v 2>&1")
   end
 end

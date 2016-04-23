@@ -5,26 +5,20 @@ class Purescript < Formula
 
   desc "Strongly typed programming language that compiles to JavaScript"
   homepage "http://www.purescript.org"
-  url "https://github.com/purescript/purescript/archive/v0.7.0.tar.gz"
-  sha256 "aea0fec66044ae2a3d05c88824ab9dc50d9744c5c7831c5ca749b1412fb156e7"
+  url "https://github.com/purescript/purescript/archive/v0.8.2.tar.gz"
+  sha256 "7155da1869f4483be0a3745ad8b7cd1d93c7fa264d17362b8dfc246d93b4c483"
 
   bottle do
-    sha256 "462d6d468b1064a3d75a63126b5263fd5091417400a268f30909a85d96239613" => :yosemite
-    sha256 "b1995100f87c03ba6cc4a272e13792ac421674b77b16b2479add947a5b19e22e" => :mavericks
-    sha256 "19b4e283ff429735340b272038e4a2983b57171c6851863c37be1fc9a99df787" => :mountain_lion
+    sha256 "01e00cf9af34ca430a21a41726360ea345c7c874175b8de4c2872566eba84c2c" => :el_capitan
+    sha256 "260f61c6f2bf9a7cb31db374117919e8bd21635db1a57d92cc24412bd657a9d9" => :yosemite
+    sha256 "5416e12c301240f98d29759d280f408397cd70e8629bd16aac742e2be902eade" => :mavericks
   end
 
   depends_on "ghc" => :build
   depends_on "cabal-install" => :build
 
-  setup_ghc_compilers
-
   def install
-    cabal_sandbox do
-      cabal_install_tools "alex", "happy"
-      install_cabal_package
-    end
-    cabal_clean_lib
+    install_cabal_package :using => ["alex", "happy"]
   end
 
   test do

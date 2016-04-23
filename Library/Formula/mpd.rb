@@ -1,18 +1,20 @@
 class Mpd < Formula
   desc "Music Player Daemon"
   homepage "http://www.musicpd.org/"
-  revision 1
 
   stable do
-    url "http://www.musicpd.org/download/mpd/0.19/mpd-0.19.10.tar.xz"
-    sha256 "c386eb3d22f98dc993b5ae3c272f969aa7763713483c6800040ebf1791b15851"
+    url "http://www.musicpd.org/download/mpd/0.19/mpd-0.19.14.tar.xz"
+    sha256 "2fd23805132e5002a4d24930001a7c7d3aaf55e3bd0cd71af5385895160e99e7"
+
+    # Fixes build because of missing patch on 0.19 branch
+    patch :DATA
   end
 
   bottle do
     cellar :any
-    sha256 "a6615df5ecee11a47d2e89492ba1d0eceb51bc832947fa819bab7b047ce09769" => :yosemite
-    sha256 "e42806034935a83e74af7be956dd1bb2c01dacad3243713f0af806a16ac4068f" => :mavericks
-    sha256 "6b2bd4efd0e48f603327446c40229fc67fc697b0011859cdefb3cb0fa3ef8059" => :mountain_lion
+    sha256 "a7f6e97ea94a2733006cff806c6cb7da3ab547ef75f9d52e4c92f6c22c5d5b3d" => :el_capitan
+    sha256 "a6798fb18a9b1e9e1443d236c9e9cf272a94acc32579c014d6a373c258d8d872" => :yosemite
+    sha256 "c029531f025af9e712b7b2108e81d14406c4394c46e8789ee1b9e6d13a36d22f" => :mavericks
   end
 
   head do
@@ -43,7 +45,7 @@ class Mpd < Formula
   needs :cxx11
 
   depends_on "libmpdclient"
-  depends_on "ffmpeg"                   # lots of codecs
+  depends_on "ffmpeg" # lots of codecs
   # mpd also supports mad, mpg123, libsndfile, and audiofile, but those are
   # redundant with ffmpeg
   depends_on "fluid-synth"              # MIDI
@@ -60,6 +62,7 @@ class Mpd < Formula
   depends_on "opus" => :optional        # Opus support
   depends_on "libvorbis" => :optional
   depends_on "libnfs" => :optional
+  depends_on "mad" => :optional
 
   def install
     # mpd specifies -std=gnu++0x, but clang appears to try to build
@@ -81,7 +84,7 @@ class Mpd < Formula
       --disable-libwrap
     ]
 
-    args << "--disable-mad"
+    args << "--disable-mad" if build.without? "mad"
     args << "--disable-curl" if MacOS.version <= :leopard
 
     args << "--enable-zzip" if build.with? "libzzip"
@@ -96,7 +99,7 @@ class Mpd < Formula
     ENV.j1 # Directories are created in parallel, so let's not do that
     system "make", "install"
 
-    (etc+"mpd").install "doc/mpdconf.example" => "mpd.conf"
+    (etc/"mpd").install "doc/mpdconf.example" => "mpd.conf"
   end
 
   plist_options :manual => "mpd"
@@ -131,10 +134,25 @@ class Mpd < Formula
     sleep 2
 
     begin
-      assert_match /OK MPD/, shell_output("curl localhost:6600")
+      assert_match "OK MPD", shell_output("curl localhost:6600")
     ensure
-      Process.kill("SIGINT", pid)
-      Process.wait(pid)
+      Process.kill "SIGINT", pid
+      Process.wait pid
     end
   end
 end
+
+__END__
+diff --git a/src/notify.hxx b/src/notify.hxx
+index 3e62a01..c96390b 100644
+--- a/src/notify.hxx
++++ b/src/notify.hxx
+@@ -28,7 +28,7 @@ struct notify {
+	Cond cond;
+	bool pending;
+
+-#if !defined(WIN32) && !defined(__NetBSD__) && !defined(__BIONIC__)
++#ifdef __GLIBC__
+	constexpr
+ #endif
+	notify():pending(false) {}

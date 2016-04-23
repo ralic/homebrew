@@ -1,15 +1,15 @@
 class Lfe < Formula
   desc "A Concurrent Lisp for the Erlang VM"
   homepage "http://lfe.io/"
-  url "https://github.com/rvirding/lfe/archive/v0.9.2.tar.gz"
-  sha256 "9ff9661d03432a5f111266e56dcc24f24ceb633541f560333c3ff1acafc20794"
+  url "https://github.com/rvirding/lfe/archive/v1.0.tar.gz"
+  sha256 "a335f593faf96fadbe9d049c5be5d331ba19628bd5dd41cedcbc62bb7c597fe7"
 
   head "https://github.com/rvirding/lfe.git", :branch => "develop"
 
   bottle do
-    sha256 "5e0da3e1633d5e289c9a92a684318a286dd97a417b4592bc7df34f470a1a0226" => :yosemite
-    sha256 "b6f986960df221080a22fba8f7f54d19a1122dbe52a6824c076ad896638fb188" => :mavericks
-    sha256 "26b4045d18d3a12945ac308b81e7a2755bd0c1a8f17e37056ec4f77daf042a4f" => :mountain_lion
+    sha256 "8a6adf72bf5d51ec031aeccfeef5b3f07a829a959ef238f0a01e4d2cee3fb0b8" => :el_capitan
+    sha256 "68bed24455801df91738dce5a0da2162d179e0b4569bb03a88bc468621d05b64" => :yosemite
+    sha256 "63bbc993e6c35f61bed6376f1660ace93a08a59169e7fe907b7688d5bdf96808" => :mavericks
   end
 
   depends_on "erlang"

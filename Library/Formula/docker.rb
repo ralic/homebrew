@@ -1,21 +1,25 @@
 class Docker < Formula
   desc "Pack, ship and run any application as a lightweight container"
   homepage "https://www.docker.com/"
-  url "https://github.com/docker/docker.git", :tag => "v1.8.1",
-                                              :revision => "d12ea79c9de6d144ce6bc7ccfe41c507cca6fd35"
+  url "https://github.com/docker/docker.git",
+      :tag => "v1.10.3",
+      :revision => "20f81dde9bd97c86b2d0e33bbbf1388018611929"
+
   head "https://github.com/docker/docker.git"
 
   bottle do
-    cellar :any
-    sha256 "c462e7f8e35f6a3a24c92e77adf6d9edaeca0677b5d7b0f2e265b60e6bb2690b" => :yosemite
-    sha256 "a2f91f72b04ee275d484e887fe679ba16190991aba46c3a4845b63c714dc1726" => :mavericks
-    sha256 "6ef8a317664148cc3af5939468a577bde2090bd65814c2ae7ea66fd5f5809e01" => :mountain_lion
+    cellar :any_skip_relocation
+    sha256 "fec2487d96d1a0806362c6aeffb08900340d33d6e3f012e33a06201c7d451570" => :el_capitan
+    sha256 "ccfa09bee67422f2a808ab05ab8f34b6014b08f7a94303044456d8a1df1cafa5" => :yosemite
+    sha256 "3923c8200c2d6e44bc8620a58a81a68355b274924fa0914fb717b52da42f4c06" => :mavericks
   end
 
   option "with-experimental", "Enable experimental features"
   option "without-completions", "Disable bash/zsh completions"
 
   depends_on "go" => :build
+  depends_on "libtool" => :run if build.with?("experimental")
+  depends_on "yubico-piv-tool" => :recommended if build.with?("experimental")
 
   def install
     ENV["AUTO_GOPATH"] = "1"
@@ -29,6 +33,7 @@ class Docker < Formula
 
     if build.with? "completions"
       bash_completion.install "contrib/completion/bash/docker"
+      fish_completion.install "contrib/completion/fish/docker.fish"
       zsh_completion.install "contrib/completion/zsh/_docker"
     end
   end

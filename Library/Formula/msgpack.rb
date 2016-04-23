@@ -1,21 +1,21 @@
 class Msgpack < Formula
   desc "Library for a binary-based efficient data interchange format"
-  homepage "http://msgpack.org/"
-  url "https://github.com/msgpack/msgpack-c/releases/download/cpp-1.1.0/msgpack-1.1.0.tar.gz"
-  sha256 "a8d400e2f0cae811a150f564d95c7ad6f30a77ad4584303de06467234b73f345"
+  homepage "https://msgpack.org/"
+  url "https://github.com/msgpack/msgpack-c/releases/download/cpp-1.4.1/msgpack-1.4.1.tar.gz"
+  sha256 "8ac512f52b30572f0244d6f521847ef3c54a59097dc05b479ac282bf1374f22e"
+
+  bottle do
+    cellar :any
+    sha256 "ab5e719c5c0e82c16da78e28e54ca44d63e90571bac3ac07a8b3c42e3c2b86f1" => :el_capitan
+    sha256 "3b7b6cca59c935e0fc1bedfad8507167c0f20bdd4b45d776d94f43b90113a35d" => :yosemite
+    sha256 "8d0cacd65a1a32fc34895c84387a639d2af4a9770568e4351ec479bfa9a570d2" => :mavericks
+  end
 
   head do
     url "https://github.com/msgpack/msgpack-c.git"
     depends_on "automake" => :build
     depends_on "autoconf" => :build
     depends_on "libtool" => :build
-  end
-
-  bottle do
-    cellar :any
-    sha256 "0887c72426c2a85e8aa928c5ab0432085801b11bdf8e28c2de195c5ced614ca1" => :yosemite
-    sha256 "dba28a0fba8b053aad351c7890f9ab15d3d6aef5495c4c330054e0c507799532" => :mavericks
-    sha256 "b4c6bd00420aa63a3aaf4ac25ebe3755bf7f5530cfb32a4c6e2daa15b97fcc8a" => :mountain_lion
   end
 
   fails_with :llvm do
@@ -62,7 +62,7 @@ class Msgpack < Formula
       }
     EOS
 
-    system ENV.cc, "-o", "test", "test.c", "-lmsgpack"
+    system ENV.cc, "-o", "test", "test.c", "-lmsgpackc"
     assert_equal "1\n2\n3\n", `./test`
   end
 end

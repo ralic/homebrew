@@ -1,13 +1,20 @@
 class Antlr < Formula
   desc "ANTLR: ANother Tool for Language Recognition"
   homepage "http://www.antlr.org/"
-  url "http://www.antlr.org/download/antlr-4.5.1-complete.jar"
-  sha256 "9cff6c76bc5aafcbf51cac7f0974ae01e4f6119402e75436abbb97f8ab15c211"
+  url "http://www.antlr.org/download/antlr-4.5.2-complete.jar"
+  sha256 "23e975fac2c464f4366c50288151d66efc1c13552c123aeb77c9e1e695772e4e"
+
+  bottle :unneeded
 
   def install
     prefix.install "antlr-#{version}-complete.jar"
-    bin.write_jar_script prefix/"antlr-#{version}-complete.jar", "antlr4"
-    (bin+"grun").write <<-EOS.undent
+
+    (bin/"antlr4").write <<-EOS.undent
+      #!/bin/bash
+      CLASSPATH="#{prefix}/antlr-#{version}-complete.jar:." exec java -jar #{prefix}/antlr-#{version}-complete.jar "$@"
+    EOS
+
+    (bin/"grun").write <<-EOS.undent
       #!/bin/bash
       java -classpath #{prefix}/antlr-#{version}-complete.jar:. org.antlr.v4.runtime.misc.TestRig "$@"
     EOS

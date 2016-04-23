@@ -1,22 +1,13 @@
 class Postgresql < Formula
   desc "Object-relational database system"
   homepage "https://www.postgresql.org/"
-
-  stable do
-    url "https://ftp.postgresql.org/pub/source/v9.4.4/postgresql-9.4.4.tar.bz2"
-    sha256 "538ed99688d6fdbec6fd166d1779cf4588bf2f16c52304e5ef29f904c43b0013"
-  end
-
-  devel do
-    url "https://ftp.postgresql.org/pub/source/v9.5alpha2/postgresql-9.5alpha2.tar.bz2"
-    sha256 "87a55f39fb465ffe47701251665d3bff431760d9941f884be7f5ff67435ba485"
-    version "9.5alpha2"
-  end
+  url "https://ftp.postgresql.org/pub/source/v9.5.2/postgresql-9.5.2.tar.bz2"
+  sha256 "f8d132e464506b551ef498719f18cfe9d777709c7a1589dc360afc0b20e47c41"
 
   bottle do
-    sha256 "25c2e16deaf18141e48f7b567ef02f8c426cc4978a41e1ee0f7f2484d8ddf2c9" => :yosemite
-    sha256 "553b8e7f01b436a9152a737f66addbd7062bb90dc711e1e50a86a6dfa3f3a673" => :mavericks
-    sha256 "78638d3488658f86664b3b98ce78d127dedbe2273e50e2bd4ac7b0af550c20c8" => :mountain_lion
+    sha256 "5458a4e6ff80ea693a5524ad50417e90316025fea7dac45b256318928cf2c2fe" => :el_capitan
+    sha256 "ddc56204624e11a273e81c9c53feadb490064dfbe0e94dd82fb22c7b2f5662db" => :yosemite
+    sha256 "4fa8aaf463af6bb3acf3e2ee4302fec1dcfd69e2afc30b57a69958eccba31197" => :mavericks
   end
 
   option "32-bit"
@@ -44,10 +35,15 @@ class Postgresql < Formula
   def install
     ENV.libxml2 if MacOS.version >= :snow_leopard
 
+    ENV.prepend "LDFLAGS", "-L#{Formula["openssl"].opt_lib} -L#{Formula["readline"].opt_lib}"
+    ENV.prepend "CPPFLAGS", "-I#{Formula["openssl"].opt_include} -I#{Formula["readline"].opt_include}"
+
     args = %W[
       --disable-debug
       --prefix=#{prefix}
-      --datadir=#{share}/#{name}
+      --datadir=#{HOMEBREW_PREFIX}/share/postgresql
+      --libdir=#{HOMEBREW_PREFIX}/lib
+      --sysconfdir=#{etc}
       --docdir=#{doc}
       --enable-thread-safety
       --with-bonjour
@@ -80,11 +76,15 @@ class Postgresql < Formula
     end
 
     system "./configure", *args
-    system "make", "install-world"
+    system "make"
+    system "make", "install-world", "datadir=#{pkgshare}",
+                                    "libdir=#{lib}",
+                                    "pkglibdir=#{lib}/postgresql"
   end
 
   def post_install
-    unless File.exist? "#{var}/postgres"
+    (var/"postgres").mkpath
+    unless File.exist? "#{var}/postgres/PG_VERSION"
       system "#{bin}/initdb", "#{var}/postgres"
     end
   end
@@ -94,8 +94,14 @@ class Postgresql < Formula
     you may need to remove the previous version first. See:
       https://github.com/Homebrew/homebrew/issues/2510
 
-    To migrate existing data from a previous major version (pre-9.4) of PostgreSQL, see:
-      https://www.postgresql.org/docs/9.4/static/upgrading.html
+    To migrate existing data from a previous major version (pre-9.0) of PostgreSQL, see:
+      http://www.postgresql.org/docs/9.5/static/upgrading.html
+
+    To migrate existing data from a previous minor version (9.0-9.4) of PosgresSQL, see:
+      http://www.postgresql.org/docs/9.5/static/pgupgrade.html
+
+      You will need your previous PostgreSQL installation from brew to perform `pg_upgrade`.
+      Do not run `brew cleanup postgresql` until you have performed the migration.
     EOS
   end
 
@@ -131,5 +137,8 @@ class Postgresql < Formula
 
   test do
     system "#{bin}/initdb", testpath/"test"
+    assert_equal "#{HOMEBREW_PREFIX}/share/postgresql", shell_output("#{bin}/pg_config --sharedir").chomp
+    assert_equal "#{HOMEBREW_PREFIX}/lib", shell_output("#{bin}/pg_config --libdir").chomp
+    assert_equal "#{HOMEBREW_PREFIX}/lib/postgresql", shell_output("#{bin}/pg_config --pkglibdir").chomp
   end
 end

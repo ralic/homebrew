@@ -7,6 +7,7 @@ class Hashpump < Formula
   bottle do
     cellar :any
     revision 1
+    sha256 "bc00f1a7c60564fed1ebf0ece40306aa169e4a7ddf7f9c8d56c7088130f5e530" => :el_capitan
     sha256 "8b33f44272b46174184639f3a6044f47151756039068343262d3e2cbe4a26a7c" => :yosemite
     sha256 "667650946f6e697657832f9f906f3a548bc55991e2422f8cbbbe7c793434111f" => :mavericks
     sha256 "a776ebf2d22d7b5fa492308fff20409696064ea70149c5cac695b75bcf004d7c" => :mountain_lion
@@ -39,8 +40,8 @@ class Hashpump < Formula
     output = %x(#{bin}/hashpump -s '6d5f807e23db210bc254a28be2d6759a0f5f5d99' \\
       -d 'count=10&lat=37.351&user_id=1&long=-119.827&waffle=eggo' \\
       -a '&waffle=liege' -k 14)
-    assert output.include? "0e41270260895979317fff3898ab85668953aaa2"
-    assert output.include? "&waffle=liege"
+    assert_match /0e41270260895979317fff3898ab85668953aaa2/, output
+    assert_match /&waffle=liege/, output
     assert_equal 0, $?.exitstatus
   end
 end

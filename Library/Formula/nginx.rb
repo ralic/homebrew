@@ -1,31 +1,30 @@
 class Nginx < Formula
   desc "HTTP(S) server and reverse proxy, and IMAP/POP3 proxy server"
   homepage "http://nginx.org/"
-  url "http://nginx.org/download/nginx-1.8.0.tar.gz"
-  sha256 "23cca1239990c818d8f6da118320c4979aadf5386deda691b1b7c2c96b9df3d5"
+  url "http://nginx.org/download/nginx-1.8.1.tar.gz"
+  sha256 "8f4b3c630966c044ec72715754334d1fdf741caa1d5795fb4646c27d09f797b7"
   head "http://hg.nginx.org/nginx/", :using => :hg
 
   bottle do
-    revision 1
-    sha256 "6df7b883f9214c5c0969559f6cc9ed56f9537263a1ef4882dae77b0b7af5a1df" => :yosemite
-    sha256 "68741910d6ee58f7ee1134c7b4c62dfd490ee337c9c0beb0d188edc418b0bd93" => :mavericks
-    sha256 "a622d0e1bfd55d8634520d72b41319da19828b9ab11063b6243d5b5f3d77ad08" => :mountain_lion
+    sha256 "17714df889eb930a3255c27ac98e229c85ccc2e356dc54e3993d2e3caf515ae7" => :el_capitan
+    sha256 "14e9c80ef124435810403e0265bccb2a31e84da8581fb157878ab876ef7fcfa1" => :yosemite
+    sha256 "e2996cbd212024a4d4a7a3eef2ba5bf381c978372937d757da70245abb9d814a" => :mavericks
   end
 
   devel do
-    url "http://nginx.org/download/nginx-1.9.3.tar.gz"
-    sha256 "4298c5341b2a262fdb8dbc0a1389756181af8f098c7720abfb30bd3060f673eb"
+    url "http://nginx.org/download/nginx-1.9.12.tar.gz"
+    sha256 "1af2eb956910ed4b11aaf525a81bc37e135907e7127948f9179f5410337da042"
   end
 
   env :userpaths
 
   # Before submitting more options to this formula please check they aren't
   # already in Homebrew/homebrew-nginx/nginx-full:
-  # https://github.com/Homebrew/homebrew-nginx/blob/master/nginx-full.rb
+  # https://github.com/Homebrew/homebrew-nginx/blob/master/Formula/nginx-full.rb
   option "with-passenger", "Compile with support for Phusion Passenger module"
   option "with-webdav", "Compile with support for WebDAV module"
   option "with-debug", "Compile with support for debug log"
-  option "with-spdy", "Compile with support for SPDY module"
+  option "with-spdy", "Compile with support for either SPDY or HTTP/2 module"
   option "with-gunzip", "Compile with support for gunzip module"
 
   depends_on "pcre"
@@ -78,8 +77,18 @@ class Nginx < Formula
 
     args << "--with-http_dav_module" if build.with? "webdav"
     args << "--with-debug" if build.with? "debug"
-    args << "--with-http_spdy_module" if build.with? "spdy"
     args << "--with-http_gunzip_module" if build.with? "gunzip"
+
+    # This became "with-http_v2_module" in 1.9.5
+    # http://nginx.org/en/docs/http/ngx_http_spdy_module.html
+    # We handle devel/stable block variable options badly, so this installs
+    # the expected module rather than fatally bailing out of configure.
+    # The option should be deprecated to the new name when stable.
+    if build.devel? || build.head? && build.with?("spdy")
+      args << "--with-http_v2_module"
+    elsif build.with?("spdy")
+      args << "--with-http_spdy_module"
+    end
 
     if build.head?
       system "./auto/configure", *args
@@ -126,7 +135,7 @@ class Nginx < Formula
 
   def passenger_caveats; <<-EOS.undent
     To activate Phusion Passenger, add this to #{etc}/nginx/nginx.conf, inside the 'http' context:
-      passenger_root #{Formula["passenger"].opt_libexec}/lib/phusion_passenger/locations.ini;
+      passenger_root #{Formula["passenger"].opt_libexec}/src/ruby_supportlib/phusion_passenger/locations.ini;
       passenger_ruby /usr/bin/ruby;
     EOS
   end
@@ -171,6 +180,30 @@ class Nginx < Formula
   end
 
   test do
-    system "#{bin}/nginx", "-t"
+    (testpath/"nginx.conf").write <<-EOS
+      worker_processes 4;
+      error_log #{testpath}/error.log;
+      pid #{testpath}/nginx.pid;
+
+      events {
+        worker_connections 1024;
+      }
+
+      http {
+        client_body_temp_path #{testpath}/client_body_temp;
+        fastcgi_temp_path #{testpath}/fastcgi_temp;
+        proxy_temp_path #{testpath}/proxy_temp;
+        scgi_temp_path #{testpath}/scgi_temp;
+        uwsgi_temp_path #{testpath}/uwsgi_temp;
+
+        server {
+          listen 8080;
+          root #{testpath};
+          access_log #{testpath}/access.log;
+          error_log #{testpath}/error.log;
+        }
+      }
+    EOS
+    system "#{bin}/nginx", "-t", "-c", testpath/"nginx.conf"
   end
 end

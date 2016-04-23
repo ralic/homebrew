@@ -1,10 +1,12 @@
 class ApacheSpark < Formula
   desc "Engine for large-scale data processing"
   homepage "https://spark.apache.org/"
+  url "https://www.apache.org/dyn/closer.lua?path=spark/spark-1.6.1/spark-1.6.1-bin-hadoop2.6.tgz"
+  version "1.6.1"
+  sha256 "09f3b50676abc9b3d1895773d18976953ee76945afa72fa57e6473ce4e215970"
   head "https://github.com/apache/spark.git"
-  url "https://www.apache.org/dyn/closer.cgi?path=spark/spark-1.4.1/spark-1.4.1-bin-hadoop2.6.tgz"
-  version "1.4.1"
-  sha256 "9cde95349cccfeb99643d2dadb63f8e88ac355e0038aae7d5029142ce94ae370"
+
+  bottle :unneeded
 
   def install
     # Rename beeline to distinguish it from hive's beeline

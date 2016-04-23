@@ -1,18 +1,16 @@
-# GnuTLS has previous, current, and next stable branches, we use current.
-# From 3.4.0 GnuTLS will be permanently disabling SSLv3. Every brew uses will need a revision with that.
-# http://nmav.gnutls.org/2014/10/what-about-poodle.html
 class Gnutls < Formula
   desc "GNU Transport Layer Security (TLS) Library"
-  homepage "http://gnutls.org"
-  url "ftp://ftp.gnutls.org/gcrypt/gnutls/v3.3/gnutls-3.3.17.1.tar.xz"
-  mirror "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v3.3/gnutls-3.3.17.1.tar.xz"
-  sha256 "b40f158030a92f450a07b20300a3996710ca19800848d9f6fd62493170c5bbb4"
+  homepage "http://gnutls.org/"
+  url "ftp://ftp.gnutls.org/gcrypt/gnutls/v3.4/gnutls-3.4.10.tar.xz"
+  mirror "https://gnupg.org/ftp/gcrypt/gnutls/v3.4/gnutls-3.4.10.tar.xz"
+  mirror "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v3.4/gnutls-3.4.10.tar.xz"
+  sha256 "6a32c2b4acbd33ff7eefcbd1357009da04c94c60146ef61320b6c076b1bdf59f"
 
   bottle do
     cellar :any
-    sha256 "4cdb3be227283ce8f939f5b36b952d85af26150986c465c980c9df4356b1e3f4" => :yosemite
-    sha256 "163f2ba093399402f690d722d49023109360f9a8f0412d3d50ba7385988cc248" => :mavericks
-    sha256 "c45005f683e63962edd3c5caf71834d3c82647167653b5f9dc617dbf97fab624" => :mountain_lion
+    sha256 "67c8d5b3352b247bf3add9046955a8a93ac4e5333885d23fd78da91f4bb21bdf" => :el_capitan
+    sha256 "d4a023c35c48040c70287e153edfa6db16ba02bfdbaa99c67a15d51ff7e4fd40" => :yosemite
+    sha256 "5ebc275d280838614d812330b95f263ad2dff60b81ad5ada2b8ccba7145138d3" => :mavericks
   end
 
   depends_on "pkg-config" => :build
@@ -20,7 +18,6 @@ class Gnutls < Formula
   depends_on "gmp"
   depends_on "nettle"
   depends_on "guile" => :optional
-  depends_on "p11-kit" => :optional
   depends_on "unbound" => :optional
 
   fails_with :llvm do
@@ -37,6 +34,7 @@ class Gnutls < Formula
       --sysconfdir=#{etc}
       --with-default-trust-store-file=#{etc}/openssl/cert.pem
       --disable-heartbeat-support
+      --without-p11-kit
     ]
 
     if build.with? "guile"

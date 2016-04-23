@@ -6,18 +6,20 @@ class Libupnp < Formula
 
   bottle do
     cellar :any
-    revision 1
-    sha1 "52432174b87b12486f78f8d4c45d0ac7b23e11eb" => :yosemite
-    sha1 "09c01a27803cc08266a601e401b9556f87e760d3" => :mavericks
+    revision 2
+    sha256 "8300a8d89071475837506bea964cdba143144186dad0943e4d8c722c799e3857" => :el_capitan
+    sha256 "29d9a4c05dcfd083b3538110d7a5089143399cb05670574761dda81d3b9c8ac7" => :yosemite
+    sha256 "ac9e828723689c2d91b6f046baca02baa1a653caacfe071aa5add056e1f2381b" => :mavericks
   end
 
   option "with-ipv6", "Enable IPv6 support"
 
   def install
-    args = ["--disable-debug",
-            "--disable-dependency-tracking",
-            "--prefix=#{prefix}"
-           ]
+    args = %W[
+      --disable-debug
+      --disable-dependency-tracking
+      --prefix=#{prefix}
+    ]
 
     args << "--enable-ipv6" if build.with? "ipv6"
 

@@ -6,10 +6,17 @@ class Libmodplug < Formula
 
   bottle do
     cellar :any
-    revision 1
-    sha1 "0901d9ad6b88c87cffaf2e9f7c2e38159f0c4c68" => :yosemite
-    sha1 "82462ed1591281bc461165071b7479417c9f3493" => :mavericks
-    sha1 "ecddcd3abd6d223334c2404f14f1f79eb93b08ba" => :mountain_lion
+    revision 2
+    sha256 "32f92108df7cbcb04fd08ee34cace282a39b073e37e3116df181c1674f3089a3" => :el_capitan
+    sha256 "ca58e85ca80a2d2199a37203fd1df19d112a4c63e357b96d0348043fbc3a93f8" => :yosemite
+    sha256 "c384456109eaced707376c862ddb087f355838958e32ec35ceb544cc6169d098" => :mavericks
+  end
+
+  resource "testmod" do
+    # Most favourited song on modarchive:
+    # http://modarchive.org/index.php?request=view_by_moduleid&query=60395
+    url "http://api.modarchive.org/downloads.php?moduleid=60395#2ND_PM.S3M"
+    sha256 "f80735b77123cc7e02c4dad6ce8197bfefcb8748b164a66ffecd206cc4b63d97"
   end
 
   def install
@@ -19,13 +26,6 @@ class Libmodplug < Formula
                           "--prefix=#{prefix}"
 
     system "make", "install"
-  end
-
-  resource "testmod" do
-    # Most favourited song on modarchive:
-    # http://modarchive.org/index.php?request=view_by_moduleid&query=60395
-    url "http://api.modarchive.org/downloads.php?moduleid=60395#2ND_PM.S3M"
-    sha256 "f80735b77123cc7e02c4dad6ce8197bfefcb8748b164a66ffecd206cc4b63d97"
   end
 
   test do

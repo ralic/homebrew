@@ -1,19 +1,17 @@
 class GstPluginsUgly < Formula
   desc "GStreamer plugins (well-supported, possibly problematic for distributors)"
-  homepage "http://gstreamer.freedesktop.org/"
-  url "http://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.4.5.tar.xz"
-  mirror "http://ftp.osuosl.org/pub/blfs/svn/g/gst-plugins-ugly-1.4.5.tar.xz"
-  sha256 "5cd5e81cf618944f4dc935f1669b2125e8bb2fe9cc7dc8dc15b72237aca49067"
-  revision 1
+  homepage "https://gstreamer.freedesktop.org/"
+  url "https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.8.0.tar.xz"
+  sha256 "53657ffb7d49ddc4ae40e3f52e56165db4c06eb016891debe2b6c0e9f134eb8c"
 
   bottle do
-    sha256 "a8e8b3809afa54e5208d1b9b55abf8dd6fa37d223c0307038816865f37d34c04" => :yosemite
-    sha256 "4c94061b809c7e2448721dece73b643a7f4c2b9b0bfd3188c40b817430285705" => :mavericks
-    sha256 "e8cbbb7406940ed09cb7e3b7b2ba487e6eff1e5b14c22301205994ac1e92bc66" => :mountain_lion
+    sha256 "de81ae62cc34b67d54cb632dce97fb108e4dff3cf839cf99703c23415e64fa8b" => :el_capitan
+    sha256 "5b471670878ccc08926394d973d3ddb5904921e7739ef11bb0f4fe3c67b77f09" => :yosemite
+    sha256 "32c4fc7c2fa4a60390f4346f69b9f4d1bf3a260c94400319d122d2b4c634d5ad" => :mavericks
   end
 
   head do
-    url "git://anongit.freedesktop.org/gstreamer/gst-plugins-ugly"
+    url "https://anongit.freedesktop.org/git/gstreamer/gst-plugins-ugly.git"
 
     depends_on "autoconf" => :build
     depends_on "automake" => :build

@@ -1,13 +1,13 @@
 class Poppler < Formula
   desc "PDF rendering library (based on the xpdf-3.0 code base)"
-  homepage "http://poppler.freedesktop.org"
-  url "http://poppler.freedesktop.org/poppler-0.35.0.tar.xz"
-  sha256 "e86755b1a4df6efe39d84f581c11bcb0e34976166a671a7b700c28ebaa3e2189"
+  homepage "https://poppler.freedesktop.org/"
+  url "https://poppler.freedesktop.org/poppler-0.42.0.tar.xz"
+  sha256 "9fef076ffe2a4f18a4e0da547d814ef5c5e6f8a283afe3387504a0bb1a418010"
 
   bottle do
-    sha256 "2ddef226bf71ff00ddf27548eadc1adf8d26c925c72da4d46dc4478570ec4912" => :yosemite
-    sha256 "29dd0e5951b599037ec093b1cf32c6786777c3da8448fa5a39967e3b7da5aa7b" => :mavericks
-    sha256 "ca7a9973bb34ca53097aadd1c43edaf8377a6ec25b80176e71ad7c7b7556566c" => :mountain_lion
+    sha256 "c2d7715138d23ac0eac803207bc9c03fcfb96ab5751ccc7ffd83b2a1810db478" => :el_capitan
+    sha256 "1daae4629100e56eea633e327fd37b460f7ff4ab96be15fb7875c28c889e6dfe" => :yosemite
+    sha256 "85132c1566c4dfbd5d8217d9e80b6a49e7e3b57f3f7a032933db3b7b2f416a4b" => :mavericks
   end
 
   option "with-qt", "Build Qt backend"
@@ -28,7 +28,6 @@ class Poppler < Formula
   depends_on "libpng"
   depends_on "libtiff"
   depends_on "openjpeg"
-
   depends_on "qt" => :optional
   depends_on "qt5" => :optional
   depends_on "little-cms2" => :optional
@@ -36,11 +35,12 @@ class Poppler < Formula
   conflicts_with "pdftohtml", :because => "both install `pdftohtml` binaries"
 
   resource "font-data" do
-    url "http://poppler.freedesktop.org/poppler-data-0.4.7.tar.gz"
+    url "https://poppler.freedesktop.org/poppler-data-0.4.7.tar.gz"
     sha256 "e752b0d88a7aba54574152143e7bf76436a7ef51977c55d6bd9a48dccde3a7de"
   end
 
   def install
+    ENV.cxx11 if MacOS.version < :mavericks
     ENV["LIBOPENJPEG_CFLAGS"] = "-I#{Formula["openjpeg"].opt_include}/openjpeg-1.5"
 
     args = %W[
@@ -52,7 +52,9 @@ class Poppler < Formula
       --enable-introspection=yes
     ]
 
-    if build.with? "qt"
+    if build.with?("qt") && build.with?("qt5")
+      raise "poppler: --with-qt and --with-qt5 cannot be used at the same time"
+    elsif build.with? "qt"
       args << "--enable-poppler-qt4"
     elsif build.with? "qt5"
       args << "--enable-poppler-qt5"

@@ -1,10 +1,12 @@
 class Vim < Formula
   desc "Vi \"workalike\" with many additional features"
   homepage "http://www.vim.org/"
-  # This package tracks debian-unstable: https://packages.debian.org/unstable/vim
-  url "https://mirrors.kernel.org/debian/pool/main/v/vim/vim_7.4.826.orig.tar.gz"
-  sha256 "02f07b60eff53f45d58686e43b72e83aa8f24a94acfa69b95fa84dc020671a38"
+  # *** Vim should be updated no more than once every 7 days ***
+  url "https://github.com/vim/vim/archive/v7.4.1655.tar.gz"
+  sha256 "8593171e3af0f6be34191ffd252fc95e81be2803f5da187b502e5be55277e1d7"
   head "https://github.com/vim/vim.git"
+
+  bottle :disable, "To use the user's Python."
 
   # We only have special support for finding depends_on :python, but not yet for
   # :ruby, :perl etc., so we use the standard environment that leaves the
@@ -88,13 +90,12 @@ class Vim < Formula
                           "--enable-multibyte",
                           "--with-tlib=ncurses",
                           "--enable-cscope",
-                          "--with-features=huge",
                           "--with-compiledby=Homebrew",
                           *opts
     system "make"
     # If stripping the binaries is enabled, vim will segfault with
     # statically-linked interpreters like ruby
-    # http://code.google.com/p/vim/issues/detail?id=114&thanks=114&ts=1361483471
+    # https://github.com/vim/vim/issues/114
     system "make", "install", "prefix=#{prefix}", "STRIP=true"
     bin.install_symlink "vim" => "vi" if build.include? "override-system-vi"
   end

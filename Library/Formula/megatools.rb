@@ -1,14 +1,14 @@
 class Megatools < Formula
   desc "Command-line client for Mega.co.nz"
-  homepage "http://megatools.megous.com/"
-  url "http://megatools.megous.com/builds/megatools-1.9.95.tar.gz"
-  sha256 "a46a560c8769b40f073fd27b321d6b89f8ac0f0ca73e6ed83047c2619fe6b437"
+  homepage "https://megatools.megous.com/"
+  url "https://megatools.megous.com/builds/megatools-1.9.97.tar.gz"
+  sha256 "3316c56ee55adef0ab113aad41ef95eb28fc15218639f69b1e04362b1c725af3"
 
   bottle do
     cellar :any
-    sha256 "0311e2291fada711351ae78aed4e1a07650f662546672e13d7e9c804dd331e29" => :yosemite
-    sha256 "cfe36bb96c87610af7cf48d554d79639523976ceb9ca7dbd1c5676472b6075cb" => :mavericks
-    sha256 "b9c56994907575b087c495495ff131d578809a2d1e1cb2199f8a135fe1dfb39c" => :mountain_lion
+    sha256 "750b9320772d15c68bc5ca3ab00ec180b5fc2321ac27115cf5bf291b9881e175" => :el_capitan
+    sha256 "2003d09d3cb12e971876f3f49ae42e9e735cc9b8e2d830181d1d5c12a326f960" => :yosemite
+    sha256 "c4b57807031a24903a8d8a103c5d7d964deb21b2065a100a8c1b90efbb633ff8" => :mavericks
   end
 
   depends_on "pkg-config" => :build

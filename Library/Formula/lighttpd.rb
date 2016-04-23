@@ -1,14 +1,13 @@
 class Lighttpd < Formula
   desc "Small memory footprint, flexible web-server"
-  homepage "http://www.lighttpd.net/"
-  url "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-1.4.36.tar.xz"
-  sha256 "897ab6b1cc7bd51671f8af759e7846245fbbca0685c30017e93a5882a9ac1a53"
+  homepage "https://www.lighttpd.net/"
+  url "https://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-1.4.39.tar.xz"
+  sha256 "7eb9a1853c3d6dd5851682b0733a729ba4158d6bdff80974d5ef5f1f6887365b"
 
   bottle do
-    revision 1
-    sha256 "7a88d41abb5e7ade23e1cec1baa71c38a045e162f160303f07dd7d854ca7c8d3" => :yosemite
-    sha256 "48404aef3bd458b5c63a1162b579466b8d77264287b5721f3abe63339c17d227" => :mavericks
-    sha256 "d4b861b7b36a0f984cafcc14703f2c4a49be23be4ff24f41310d65f95df25f00" => :mountain_lion
+    sha256 "980a717148dd248f4577af9918c402b531bbb0eccc8e446584d9a0145024d6d7" => :el_capitan
+    sha256 "b07856b57079ea6e83a19c7f653c607214bfe8a35e8b43623cb6469936ac2c35" => :yosemite
+    sha256 "3a9497a510e6a002295deb6a98ccff5cc3ad12fde75193c61d783df10c611477" => :mavericks
   end
 
   option "with-lua51", "Include Lua scripting support for mod_magnet"
@@ -57,9 +56,6 @@ class Lighttpd < Formula
     args << "--with-lua" if build.with? "lua51"
     args << "--with-libev" if build.with? "libev"
 
-    # fixed upstream, should be in next release: http://redmine.lighttpd.net/issues/2517
-    inreplace "src/Makefile.am", "$(LDAP_LIB)", "$(SSL_LIB) $(LDAP_LIB)"
-
     # autogen must be run, otherwise prebuilt configure may complain
     # about a version mismatch between included automake and Homebrew's
     system "./autogen.sh"
@@ -86,10 +82,10 @@ class Lighttpd < Formula
         s.sub!(/^server\.username\s*=\s*".+"$/, 'server.username  = "_www"')
         s.sub!(/^server\.groupname\s*=\s*".+"$/, 'server.groupname = "_www"')
         s.sub!(/^server\.event-handler\s*=\s*"linux-sysepoll"$/, 'server.event-handler = "select"')
-        s.sub!(/^server\.network-backend\s*=\s*"linux-sendfile"$/, 'server.network-backend = "writev"')
+        s.sub!(/^server\.network-backend\s*=\s*"sendfile"$/, 'server.network-backend = "writev"')
 
         # "max-connections == max-fds/2",
-        # http://redmine.lighttpd.net/projects/1/wiki/Server_max-connectionsDetails
+        # https://redmine.lighttpd.net/projects/1/wiki/Server_max-connectionsDetails
         s.sub!(/^server\.max-connections = .+$/, "server.max-connections = " + (MAX_FDS / 2).to_s)
       end
     end
@@ -102,7 +98,7 @@ class Lighttpd < Formula
   def caveats; <<-EOS.undent
     Docroot is: #{www_path}
 
-    The default port has been set in #{config_path}lighttpd.conf to 8080 so that
+    The default port has been set in #{config_path}/lighttpd.conf to 8080 so that
     lighttpd can run without sudo.
     EOS
   end

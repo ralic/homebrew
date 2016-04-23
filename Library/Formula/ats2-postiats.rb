@@ -1,20 +1,27 @@
 class Ats2Postiats < Formula
   desc "ATS programming language implementation"
   homepage "http://www.ats-lang.org/"
-  url "https://downloads.sourceforge.net/project/ats2-lang/ats2-lang/ats2-postiats-0.2.1/ATS2-Postiats-0.2.1.tgz"
-  sha256 "0a0d3a7e762a7a7ae77e5d3e27ccdc43766d19316579bfa2015a9f7977e86f7b"
+  url "https://downloads.sourceforge.net/project/ats2-lang/ats2-lang/ats2-postiats-0.2.6/ATS2-Postiats-0.2.6.tgz"
+  sha256 "3179a33eb059992bbab0a172fc0daecc562d9d255797bfda4cabe69e2be2ca41"
 
   bottle do
     cellar :any
-    sha256 "be9ab239456434d4208d9a7cd50cb9131771729792b0c327b00b996451eb6c4d" => :yosemite
-    sha256 "5d85ec1cac8ba021da8103c5dfdb1bb6eac825475c3a4a7e0a0961ea96df324a" => :mavericks
-    sha256 "1cdd861830a35f51c2050621e518d5a7d1e47aca432a58e677cf85b600531959" => :mountain_lion
+    sha256 "6e785e794968e28490e1efb6a27caddcf7354487a86d8175e08eda0548d2e2e3" => :el_capitan
+    sha256 "927645699416856b37464b7a590df5305728a9356e980a47698e95268b97843d" => :yosemite
+    sha256 "0b7a8ec75778785d525abb6039f006d2d2971f30c700f33f20d457cd5cc0e3e5" => :mavericks
   end
 
   depends_on "gmp"
 
   fails_with :clang do
     cause "Trying to compile this with Clang is failure-galore."
+  end
+
+  # error: expected declaration specifiers or '...' before '__builtin_object_size'
+  # Already fixed upstream. Can remove this on next release.
+  patch do
+    url "https://github.com/githwxi/ATS-Postiats/commit/5b3d6a8ac7.diff"
+    sha256 "9e7ceea54d9e02323711e0ede3b64528f008f084007a0bea43ce2be9b31d916a"
   end
 
   def install
@@ -24,8 +31,7 @@ class Ats2Postiats < Formula
 
     # Disable GC support for patsopt
     # https://github.com/githwxi/ATS-Postiats/issues/76
-    system "make", "GCFLAG=-D_ATS_NGC", "all"
-    system "make", "install"
+    system "make", "GCFLAG=-D_ATS_NGC", "all", "install"
   end
 
   test do

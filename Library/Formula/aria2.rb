@@ -1,22 +1,23 @@
 class Aria2 < Formula
   desc "Download with resuming and segmented downloading"
   homepage "http://aria2.sourceforge.net/"
-  url "https://downloads.sourceforge.net/project/aria2/stable/aria2-1.19.0/aria2-1.19.0.tar.bz2"
-  mirror "https://mirrors.kernel.org/debian/pool/main/a/aria2/aria2_1.19.0.orig.tar.bz2"
-  sha256 "ae2b6fce7a0974c9156415cccf2395cd258580ab34eec2b34a8e76120b7240ce"
+  url "https://github.com/tatsuhiro-t/aria2/releases/download/release-1.21.0/aria2-1.21.0.tar.xz"
+  sha256 "225c5f2c8acc899e0a802cdf198f82bd0d3282218e80cdce251b1f9ffacf6580"
 
   bottle do
-    cellar :any
-    sha256 "74b5953f8370d15dae0c8461fe28152f356b71083d57f582ba93c2a29a9af2c0" => :yosemite
-    sha256 "41d5c1c5c076451bced12bad349911f6db3ece6b5ca685a9915e0c7d460f8109" => :mavericks
-    sha256 "e1a1d49a8dccd4e24371a685dd66d5d2a37e180c8fc2f733243cd68b77e3bf5b" => :mountain_lion
+    cellar :any_skip_relocation
+    sha256 "724b7aa74bd3e7cd470162adf27ab5bd1d1369a16108ddd5def2dc1ab99fac95" => :el_capitan
+    sha256 "83b3f974bc53c3b59f8bf32fc84c855e24e794e0e0350f7477b4773e6e6a2fa0" => :yosemite
+    sha256 "8fc117fbdf3470cf3be39573b0553728538742a45776dc6a3dbfedef30b430e1" => :mavericks
   end
 
   depends_on "pkg-config" => :build
+  depends_on "libssh2" => :optional
 
   needs :cxx11
 
   def install
+
     args = %W[
       --disable-dependency-tracking
       --prefix=#{prefix}
@@ -27,6 +28,8 @@ class Aria2 < Formula
       --without-libnettle
       --without-libgcrypt
     ]
+
+    args << "--with-libssh2" if build.with? "libssh2"
 
     system "./configure", *args
     system "make", "install"

@@ -14,54 +14,46 @@ end
 class Qt5 < Formula
   desc "Version 5 of the Qt framework"
   homepage "https://www.qt.io/"
-  head "https://code.qt.io/qt/qt5.git", :branch => "5.5", :shallow => false
+  url "https://download.qt.io/official_releases/qt/5.6/5.6.0/single/qt-everywhere-opensource-src-5.6.0.tar.xz"
+  mirror "https://www.mirrorservice.org/sites/download.qt-project.org/official_releases/qt/5.6/5.6.0/single/qt-everywhere-opensource-src-5.6.0.tar.xz"
+  sha256 "76a95cf6c1503290f75a641aa25079cd0c5a8fcd7cff07ddebff80a955b07de7"
 
-  stable do
-    # 5.5.0 has a compile-breaking pkg-config error when projects use that to find libs.
-    # https://bugreports.qt.io/browse/QTBUG-47162
-    # This is known to impact Wireshark & Poppler optional Qt5 usage in the core.
-    url "https://download.qt.io/official_releases/qt/5.5/5.5.0/single/qt-everywhere-opensource-src-5.5.0.tar.xz"
-    mirror "https://www.mirrorservice.org/sites/download.qt-project.org/official_releases/qt/5.5/5.5.0/single/qt-everywhere-opensource-src-5.5.0.tar.xz"
-    sha256 "7ea2a16ecb8088e67db86b0835b887d5316121aeef9565d5d19be3d539a2c2af"
-
-    # Apple's 3.6.0svn based clang doesn't support -Winconsistent-missing-override
-    # https://bugreports.qt.io/browse/QTBUG-46833
-    # This is fixed in 5.5 branch and below patch should be removed
-    # when this formula is updated to 5.5.1
-    patch :DATA
-
-    # Upstream commit to fix the fatal build error on OS X El Capitan.
-    # https://codereview.qt-project.org/#/c/121545/
-    # Should land in the 5.5.1 release.
-    if MacOS.version >= :el_capitan
-      patch do
-        url "https://raw.githubusercontent.com/DomT4/scripts/2107043e8/Homebrew_Resources/Qt5/qt5_el_capitan.diff"
-        sha256 "bd8fd054247ec730f60778e210d58cba613265e5df04ec93f4110421fb03b14a"
-      end
-    end
-  end
+  head "https://code.qt.io/qt/qt5.git", :branch => "5.6", :shallow => false
 
   bottle do
-    sha256 "3f334cdb65ea7ab4255abfd254f08cf095b3ba2c9f1e403afe6236975a88b160" => :yosemite
-    sha256 "9bef8bea9a731fc5b26434f817858931442783c8a4a62bf4dc95fa6944550ed8" => :mavericks
-    sha256 "946991e0aa83dfb119e9ed306a61645b9648537212758477db7772179f7503e4" => :mountain_lion
+    sha256 "c20268ac2ca94cb2daa0da352ad3ca8f2a16b0429c00e2fa444bc1f6b5488f6f" => :el_capitan
+    sha256 "9924fa2ac0cd8b661c861f81696679ba10496b91a35ee706033739816bb5bb90" => :yosemite
+    sha256 "bcbb60b1c00e63cf75e8632d1577e9f882da1febb1ae5a8a2ca8afd9e4d07a61" => :mavericks
+  end
+
+  # Restore `.pc` files for framework-based build of Qt 5 on OS X. This
+  # partially reverts <https://codereview.qt-project.org/#/c/140954/> merged
+  # between the 5.5.1 and 5.6.0 releases. (Remove this as soon as feasible!)
+  #
+  # Core formulae known to fail without this patch (as of 2016-03-17):
+  #   * mkvtoolnix (with `--with-qt5` option, silent build failure)
+  #   * poppler    (with `--with-qt5` option)
+  #   * wireshark  (with `--with-qt5` option)
+  patch do
+    url "https://raw.githubusercontent.com/Homebrew/patches/e8fe6567/qt5/restore-pc-files.patch"
+    sha256 "48ff18be2f4050de7288bddbae7f47e949512ac4bcd126c2f504be2ac701158b"
   end
 
   keg_only "Qt 5 conflicts Qt 4 (which is currently much more widely used)."
 
-  option :universal
   option "with-docs", "Build documentation"
   option "with-examples", "Build examples"
-  option "with-developer", "Build and link with developer options"
   option "with-oci", "Build with Oracle OCI plugin"
 
-  deprecated_option "developer" => "with-developer"
+  option "without-webengine", "Build without QtWebEngine module"
+
   deprecated_option "qtdbus" => "with-d-bus"
 
-  # Snow Leopard is untested and support has been removed in 5.4
-  # https://qt.gitorious.org/qt/qtbase/commit/5be81925d7be19dd0f1022c3cfaa9c88624b1f08
-  depends_on :macos => :lion
-  depends_on "pkg-config" => :build
+  # OS X 10.7 Lion is still supported in Qt 5.5, but is no longer a reference
+  # configuration and thus untested in practice. Builds on OS X 10.7 have been
+  # reported to fail: <https://github.com/Homebrew/homebrew/issues/45284>.
+  depends_on :macos => :mountain_lion
+
   depends_on "d-bus" => :optional
   depends_on :mysql => :optional
   depends_on :xcode => :build
@@ -69,14 +61,17 @@ class Qt5 < Formula
   depends_on OracleHomeVarRequirement if build.with? "oci"
 
   def install
-    ENV.universal_binary if build.universal?
-
-    args = ["-prefix", prefix,
-            "-system-zlib", "-securetransport",
-            "-qt-libpng", "-qt-libjpeg",
-            "-no-rpath", "-no-openssl",
-            "-confirm-license", "-opensource",
-            "-nomake", "tests", "-release"]
+    args = %W[
+      -verbose
+      -prefix #{prefix}
+      -release
+      -opensource -confirm-license
+      -system-zlib
+      -qt-libpng
+      -qt-libjpeg
+      -nomake tests
+      -no-rpath
+    ]
 
     args << "-nomake" << "examples" if build.without? "examples"
 
@@ -89,14 +84,8 @@ class Qt5 < Formula
       args << "-L#{dbus_opt}/lib"
       args << "-ldbus-1"
       args << "-dbus-linked"
-    end
-
-    if MacOS.prefer_64_bit? || build.universal?
-      args << "-arch" << "x86_64"
-    end
-
-    if !MacOS.prefer_64_bit? || build.universal?
-      args << "-arch" << "x86"
+    else
+      args << "-no-dbus"
     end
 
     if build.with? "oci"
@@ -105,7 +94,7 @@ class Qt5 < Formula
       args << "-plugin-sql-oci"
     end
 
-    args << "-developer-build" if build.with? "developer"
+    args << "-skip" << "qtwebengine" if build.without? "webengine"
 
     system "./configure", *args
     system "make"
@@ -129,10 +118,19 @@ class Qt5 < Formula
 
     # configure saved PKG_CONFIG_LIBDIR set up by superenv; remove it
     # see: https://github.com/Homebrew/homebrew/issues/27184
-    inreplace prefix/"mkspecs/qconfig.pri", /\n\n# pkgconfig/, ""
-    inreplace prefix/"mkspecs/qconfig.pri", /\nPKG_CONFIG_.*=.*$/, ""
+    inreplace prefix/"mkspecs/qconfig.pri",
+              /\n# pkgconfig\n(PKG_CONFIG_(SYSROOT_DIR|LIBDIR) = .*\n){2}\n/,
+              "\n"
 
-    Pathname.glob("#{bin}/*.app") { |app| mv app, prefix }
+    # Move `*.app` bundles into `libexec` to expose them to `brew linkapps` and
+    # because we don't like having them in `bin`. Also add a `-qt5` suffix to
+    # avoid conflict with the `*.app` bundles provided by the `qt` formula.
+    # (Note: This move/rename breaks invocation of Assistant via the Help menu
+    # of both Designer and Linguist as that relies on Assistant being in `bin`.)
+    libexec.mkpath
+    Pathname.glob("#{bin}/*.app") do |app|
+      mv app, libexec/"#{app.basename(".app")}-qt5.app"
+    end
   end
 
   def caveats; <<-EOS.undent
@@ -171,18 +169,3 @@ class Qt5 < Formula
     system "./hello"
   end
 end
-
-__END__
-diff --git a/qtbase/src/corelib/global/qcompilerdetection.h b/qtbase/src/corelib/global/qcompilerdetection.h
-index 7ff1b67..060af29 100644
---- a/qtbase/src/corelib/global/qcompilerdetection.h
-+++ b/qtbase/src/corelib/global/qcompilerdetection.h
-@@ -155,7 +155,7 @@
- /* Clang also masquerades as GCC */
- #    if defined(__apple_build_version__)
- #      /* http://en.wikipedia.org/wiki/Xcode#Toolchain_Versions */
--#      if __apple_build_version__ >= 6020049
-+#      if __apple_build_version__ >= 7000053
- #        define Q_CC_CLANG 306
- #      elif __apple_build_version__ >= 6000051
- #        define Q_CC_CLANG 305

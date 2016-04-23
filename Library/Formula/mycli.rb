@@ -1,22 +1,22 @@
 class Mycli < Formula
   desc "CLI for MySQL with auto-completion and syntax highlighting"
   homepage "http://mycli.net/"
-  url "https://pypi.python.org/packages/source/m/mycli/mycli-1.2.0.tar.gz"
-  sha256 "5a440fab6af03272e932e90a97e625fb8b304cfbf134ea2ccee14e2cb2e261e9"
+  url "https://pypi.python.org/packages/source/m/mycli/mycli-1.6.0.tar.gz"
+  sha256 "f298eb307e431d666d094b484830796f68b7c099773330a709cbff388559e461"
 
   bottle do
-    cellar :any
-    sha256 "7e63b349ad3702b250ca3c68c11c61304b3b2f40274e6c800fee6a3b3a5a9008" => :yosemite
-    sha256 "af16063570d59926e289a9bb79a6424cd6312a62a31c4f6ef7a3025486363336" => :mavericks
-    sha256 "e6bb679213f65af9e5be2094228e8b8258a03c2753eb2910f49be93477838ca4" => :mountain_lion
+    cellar :any_skip_relocation
+    sha256 "7b5a77407b8b16380a9f0443c951a3d917dd593dbec7415a9f8e4857d7aa1288" => :el_capitan
+    sha256 "6614175fe7794386753d3530958bca5617238b32851ea2e68181f3b2a92f263a" => :yosemite
+    sha256 "06f07fefa1ad025bba3c4d688ff0df6b8da8a12f484b0d7b5a4ebfe7b828bc73" => :mavericks
   end
 
   depends_on :python if MacOS.version <= :snow_leopard
   depends_on "openssl"
 
   resource "click" do
-    url "https://pypi.python.org/packages/source/c/click/click-4.1.tar.gz"
-    sha256 "e339ed09f25e2145314c902a870bc959adcb25653a2bd5cc1b48d9f56edf8ed8"
+    url "https://pypi.python.org/packages/source/c/click/click-6.4.tar.gz"
+    sha256 "6eb86ac0e44e60b3085e7b87797fe2adf745dbea38b78d7db1f17ec96ca016ed"
   end
 
   resource "configobj" do
@@ -25,38 +25,43 @@ class Mycli < Formula
   end
 
   resource "prompt_toolkit" do
-    url "https://pypi.python.org/packages/source/p/prompt_toolkit/prompt_toolkit-0.45.tar.gz"
-    sha256 "553fd2b9169674adacf227ede2e056c2bbd7181a4a3ca614960467c0720997a6"
+    url "https://pypi.python.org/packages/source/p/prompt_toolkit/prompt_toolkit-0.60.tar.gz"
+    sha256 "b44acc4cf3fb9f7331343ae170eac06f853a66e28cdd4ccfeee7c8dad0dec33d"
+  end
+
+  resource "pycrypto" do
+    url "https://pypi.python.org/packages/source/p/pycrypto/pycrypto-2.6.1.tar.gz"
+    sha256 "f2ce1e989b272cfcb677616763e0a2e7ec659effa67a88aa92b3a65528f60a3c"
   end
 
   resource "Pygments" do
-    url "https://pypi.python.org/packages/source/P/Pygments/Pygments-2.0.2.tar.gz"
-    sha256 "7320919084e6dac8f4540638a46447a3bd730fca172afc17d2c03eed22cf4f51"
+    url "https://pypi.python.org/packages/source/P/Pygments/Pygments-2.1.3.tar.gz"
+    sha256 "88e4c8a91b2af5962bfa5ea2447ec6dd357018e86e94c7d14bd8cacbc5b55d81"
   end
 
   resource "PyMySQL" do
-    url "https://pypi.python.org/packages/source/P/PyMySQL/PyMySQL-0.6.6.tar.gz"
-    sha256 "c18e62ca481c5ada6c7bee1b81fc003d6ceae932c878db384cd36808010b3774"
+    url "https://pypi.python.org/packages/source/P/PyMySQL/PyMySQL-0.7.2.tar.gz"
+    sha256 "bd7acb4990dbf097fae3417641f93e25c690e01ed25c3ed32ea638d6c3ac04ba"
   end
 
   resource "six" do
-    url "https://pypi.python.org/packages/source/s/six/six-1.9.0.tar.gz"
-    sha256 "e24052411fc4fbd1f672635537c3fc2330d9481b18c0317695b46259512c91d5"
+    url "https://pypi.python.org/packages/source/s/six/six-1.10.0.tar.gz"
+    sha256 "105f8d68616f8248e24bf0e9372ef04d3cc10104f1980f54d57b2ce73a5ad56a"
   end
 
   resource "sqlparse" do
-    url "https://pypi.python.org/packages/source/s/sqlparse/sqlparse-0.1.14.tar.gz"
-    sha256 "e561e31853ab9f3634a1a2bd53035f9e47dfb203d56b33cc6569047ba087daf0"
+    url "https://pypi.python.org/packages/source/s/sqlparse/sqlparse-0.1.19.tar.gz"
+    sha256 "d896be1a1c7f24bffe08d7a64e6f0176b260e281c5f3685afe7826f8bada4ee8"
   end
 
   resource "wcwidth" do
-    url "https://pypi.python.org/packages/source/w/wcwidth/wcwidth-0.1.4.tar.gz"
-    sha256 "906d3123045d77027b49fe912458e1a1e1d6ca1a51558a4bd9168d143b129d2b"
+    url "https://pypi.python.org/packages/source/w/wcwidth/wcwidth-0.1.6.tar.gz"
+    sha256 "dcb3ec4771066cc15cf6aab5d5c4a499a5f01c677ff5aeb46cf20500dccd920b"
   end
 
   def install
     ENV.prepend_create_path "PYTHONPATH", libexec/"vendor/lib/python2.7/site-packages"
-    %w[click prompt_toolkit PyMySQL sqlparse Pygments wcwidth six configobj].each do |r|
+    %w[click prompt_toolkit pycrypto PyMySQL sqlparse Pygments wcwidth six configobj].each do |r|
       resource(r).stage do
         system "python", *Language::Python.setup_install_args(libexec/"vendor")
       end

@@ -1,22 +1,27 @@
 class Gl2ps < Formula
   desc "OpenGL to PostScript printing library"
   homepage "http://www.geuz.org/gl2ps/"
-  url "http://geuz.org/gl2ps/src/gl2ps-1.3.8.tgz"
-  sha256 "2fe58dd95df06688a8c188e70b1803093ebf0797954901f4a36a403dbc301ee5"
-  revision 1
+  url "http://geuz.org/gl2ps/src/gl2ps-1.3.9.tgz"
+  sha256 "8a680bff120df8bcd78afac276cdc38041fed617f2721bade01213362bcc3640"
+  revision 2
 
   bottle do
     cellar :any
-    sha1 "ed85fb272142121ab9e28a79266cfcf6dd6e60ce" => :yosemite
-    sha1 "f80c1fbd51b505902fb8a00f7fd97133cc9be4b0" => :mavericks
-    sha1 "5650d4b48f26d1a5bf66b86db927cc672eef95d3" => :mountain_lion
+    sha256 "f98527a92984dcb172b803c0a5503a06a3fec0c7ff980f1921adc0d77fda19c3" => :el_capitan
+    sha256 "884f489b6106f81cfe2821230065333e36894e9316fa90b9af4ef84a1d7af749" => :yosemite
+    sha256 "22504f9aa0239aa8395bb6a9c48b374885b7fb20603da15e28d730cf97a2990d" => :mavericks
   end
 
   depends_on "cmake" => :build
   depends_on "libpng"
 
   def install
-    system "cmake", ".", *std_cmake_args
+    # Prevent linking against X11's libglut.dylib when it's present
+    # Reported to upstream's mailing list gl2ps@geuz.org (1st April 2016)
+    # http://www.geuz.org/pipermail/gl2ps/2016/000433.html
+    # Reported to cmake's bug tracker, as well (1st April 2016)
+    # https://public.kitware.com/Bug/view.php?id=16045
+    system "cmake", ".", "-DGLUT_glut_LIBRARY=/System/Library/Frameworks/GLUT.framework", *std_cmake_args
     system "make", "install"
   end
 

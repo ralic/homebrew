@@ -1,14 +1,15 @@
 class AutoconfArchive < Formula
   desc "Collection of over 500 reusable autoconf macros"
   homepage "https://savannah.gnu.org/projects/autoconf-archive/"
-  url "http://ftpmirror.gnu.org/autoconf-archive/autoconf-archive-2015.02.24.tar.xz"
-  mirror "https://ftp.gnu.org/gnu/autoconf-archive/autoconf-archive-2015.02.24.tar.xz"
-  sha256 "69715bdd078f552ca85e498a94543e11cb8bcdf0359e659b84d84d19372b0dc5"
+  url "http://ftpmirror.gnu.org/autoconf-archive/autoconf-archive-2016.03.20.tar.xz"
+  mirror "https://ftp.gnu.org/gnu/autoconf-archive/autoconf-archive-2016.03.20.tar.xz"
+  sha256 "88fb2efff640eddd28a52ae550ff5561bca3bd2bba09e1d7b0580e719875e437"
 
   bottle do
-    sha1 "379b87f4f2a0ab895b98566a9d846e39143febb9" => :yosemite
-    sha1 "57aa4726af450fa77e509a29aeb03d6c819706cf" => :mavericks
-    sha1 "5c2d27e4a970cdc0ef102e0404a5eb13cc1f0543" => :mountain_lion
+    cellar :any_skip_relocation
+    sha256 "447b84380eb0b66c000b3dc9f00d33a53e7e956243041fd5069a8239250a533e" => :el_capitan
+    sha256 "fd4d4cefa88eefe1b106a095b17e8330629f0d6a4baf8de7e8b1482b68cdab5a" => :yosemite
+    sha256 "b4cd6a71e0a0b8c6a0ff31cc6584c359ab0c07200ba3d5960e72d54ade9bc2d7" => :mavericks
   end
 
   # autoconf-archive is useless without autoconf
@@ -26,7 +27,7 @@ class AutoconfArchive < Formula
 
       m4_include([#{share}/aclocal/ax_have_select.m4])
 
-      # from http://www.gnu.org/software/autoconf-archive/ax_have_select.html
+      # from https://www.gnu.org/software/autoconf-archive/ax_have_select.html
       AX_HAVE_SELECT(
         [AX_CONFIG_FEATURE_ENABLE(select)],
         [AX_CONFIG_FEATURE_DISABLE(select)])

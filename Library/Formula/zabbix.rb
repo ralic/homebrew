@@ -1,14 +1,13 @@
 class Zabbix < Formula
   desc "Availability and monitoring solution"
   homepage "https://www.zabbix.com/"
-  url "https://downloads.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/2.4.4/zabbix-2.4.4.tar.gz"
-  sha256 "e9f31b96104681b050fd27b4a669736dea9c5d4efc8444effb2bff1eab6cc34c"
+  url "https://downloads.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/3.0.1/zabbix-3.0.1.tar.gz"
+  sha256 "e91a8497bf635b96340988e2d9ca1bb3fac06e657b6596fa903c417a6c6b110b"
 
   bottle do
-    revision 1
-    sha256 "da258ee3875028433d61757fa6025aab5af1cd22b397f3bb470f826e69464878" => :yosemite
-    sha256 "429ed618c9b1be7546595b4a227e440037f0b5322cb4f35b42d5720cee22edf4" => :mavericks
-    sha256 "63acb31c04f4d4e9edbe5cc4e3016df4712466de42efc7c1c9c1c9874cd246f4" => :mountain_lion
+    sha256 "280644147140b9bab7a62980f504ead6c92dff07be53307241dd9714b4450ab4" => :el_capitan
+    sha256 "bc73d952251046996572adb17f8a7e86a0fe6ef2889dfbd0416159479bf28127" => :yosemite
+    sha256 "6456b27c7e81a5714baa818ba7c280bfc3972f6065ab1fa3b079bb9aa8dd83c2" => :mavericks
   end
 
   option "with-mysql", "Use Zabbix Server with MySQL library instead PostgreSQL."
@@ -58,7 +57,7 @@ class Zabbix < Formula
 
     if build.with? "server-proxy"
       db = build.with?("mysql") ? "mysql" : "postgresql"
-      (share/"zabbix").install "frontends/php", "database/#{db}"
+      pkgshare.install "frontends/php", "database/#{db}"
     end
   end
 

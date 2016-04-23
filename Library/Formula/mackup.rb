@@ -1,16 +1,16 @@
 class Mackup < Formula
   desc "Keep your Mac's application settings in sync"
   homepage "https://github.com/lra/mackup"
-  url "https://github.com/lra/mackup/archive/0.8.10.tar.gz"
-  sha256 "fa7f5f9600e33742f07a5288a4e3a7ef63690530b28870da12606fdadb5f8fc2"
+  url "https://github.com/lra/mackup/archive/0.8.13.tar.gz"
+  sha256 "b42e7ccec9bf270b154b9bae1e1608b1068a6b3ca289991c755c915dd6e18f43"
 
   head "https://github.com/lra/mackup.git"
 
   bottle do
-    cellar :any
-    sha256 "9fd3f9f427a83fb31e87025e924398e2ffe3166a8d1a86fee1ba4fe9d3932d7d" => :yosemite
-    sha256 "6b6dc57f02ccfe1c92a6b13f1c163d04a34aeeae973952c2ddd9b5f3e8aec9d5" => :mavericks
-    sha256 "be5ac0d33abc40e6016cd0e91106d073c8ce7d52a496be3c688ec17556d0132e" => :mountain_lion
+    cellar :any_skip_relocation
+    sha256 "ff46c818bece2cdde93c6ddfa0af859a51e46c0d9e02874fa721666a717063d6" => :el_capitan
+    sha256 "1a543ab4bd7e3a093dbf3447f9f9f265088313669d18d1a574646bd5a9fd18e3" => :yosemite
+    sha256 "dfdfecbb9af08dc72e5beab5d88ac49d9ab7bc1438b96a0837b7ec76553c5337" => :mavericks
   end
 
   depends_on :python if MacOS.version <= :snow_leopard

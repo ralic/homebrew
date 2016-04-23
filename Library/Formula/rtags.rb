@@ -2,15 +2,15 @@ class Rtags < Formula
   desc "ctags-like source code cross-referencer with a clang frontend"
   homepage "https://github.com/Andersbakken/rtags"
   url "https://github.com/Andersbakken/rtags.git",
-      :tag => "v2.0",
-      :revision => "ba85598841648490e64246be802fc2dcdd45bc3c"
+      :tag => "v2.2",
+      :revision => "925a188e4038fa6e4a7c8ea4d30d682609c46578"
 
   head "https://github.com/Andersbakken/rtags.git"
 
   bottle do
-    sha256 "76809519b7d18df4289c88943607fe457c19f30d35fa283b5db0a387b3d83e63" => :yosemite
-    sha256 "cc6dd88798074827fc3e27900ac7cc82763ae06d06a4e5f15afde28e9210376b" => :mavericks
-    sha256 "6324718564081d380bc5eac717e4388315203d05ec52d2154ce0466191b16e8a" => :mountain_lion
+    sha256 "7eba56cbea17e32c329164835d782d120a3aacacbe8d1cdf0e5761a52bf7f6e3" => :el_capitan
+    sha256 "f344da9acdca6ffd14e18eff1cd2b6f1bb446b25c182328cc27c4832b46d8854" => :yosemite
+    sha256 "fc16449d0ae6e8a1104833ef97839d82d9f3fab840e9e4bd069fab41bc77e36b" => :mavericks
   end
 
   depends_on "cmake" => :build
@@ -30,41 +30,33 @@ class Rtags < Formula
 
   test do
     mkpath testpath/"src"
-    (testpath/"src/foo.c").write(<<-END.undent)
+    (testpath/"src/foo.c").write <<-EOS.undent
         void zaphod() {
         }
 
         void beeblebrox() {
           zaphod();
         }
-        END
-    (testpath/"src/README").write(<<-END.undent)
+    EOS
+    (testpath/"src/README").write <<-EOS.undent
         42
-      END
+    EOS
+
     rdm = fork do
       $stdout.reopen("/dev/null")
       $stderr.reopen("/dev/null")
       exec "#{bin}/rdm", "-L", "log"
     end
-    def pause
-      slept = 0
-      while slept < 5
-        Kernel.system "#{bin}/rc --is-indexing >/dev/null 2>&1"
-        if $? == 0
-          break
-        end
-        dt = 0.01
-        sleep dt
-        slept += dt
-      end
+
+    begin
+      sleep 1
+      pipe_output("#{bin}/rc -c", "clang -c src/foo.c", 0)
+      sleep 1
+      assert_match "foo.c:1:6", shell_output("#{bin}/rc -f src/foo.c:5:3")
+      system "#{bin}/rc", "-q"
+    ensure
+      Process.kill 9, rdm
+      Process.wait rdm
     end
-    pause
-    system "sh", "-c", "echo clang -c src/foo.c | #{bin}/rc -c"
-    assert_equal $?, 0
-    pause
-    assert_match /foo\.c:1:6/, shell_output("#{bin}/rc -f src/foo.c:5:3")
-    system "#{bin}/rc", "-q"
-    assert_equal $?, 0
-    Process.wait(rdm)
   end
 end
